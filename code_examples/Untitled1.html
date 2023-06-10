@@ -14,9 +14,37 @@
 </head>
 <body>
 
-<div id="editor">
+<div id="editor">// --------
+// Title: My first experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
 
-  var jsPsych = initJsPsych();
+// ----------------
+// INITIATE JSPSYCH
+// ----------------
+
+// create a var called jsPsych to store the initJsPsych function
+
+var jsPsych = initJsPsych();
+
+// ---------------
+// TIMELINE
+// ---------------
+
+// we first have to establish a timeline, which we will use to push the different trials todo
+// this starts off as an empty array, as indicated by the empty square brackets []
+
+var timeline = [];
+
+// ----------------
+// RUN THE EXPERIMENT
+// ----------------
+
+// now we can run the experiment using the jsPysch.run function, we specify that our timeline array is what we want to run
+
+jsPsych.run(timeline);
 
 </div>
 

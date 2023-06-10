@@ -37,7 +37,7 @@ knitr::knit_hooks$set(
   message = function(x, options) {
      paste('<button type="button" class="collapsible1"><strong>',
      fa(name = "circle-info"),
-     ' more info</strong></button><div class="content1"><p>',
+     ' more info</strong></button>', '<div class="content1"><p>',
      gsub('##', '\n', x),
      '</p></div>',
      sep = '\n')
@@ -162,7 +162,7 @@ slickR(obj=c("images/cognition1.png","images/cognition2.png", "images/cognition3
 6. On this page you can start writing your code that makes your experiment. Before we start writing our code we will need to know how jsPsych works, which will be covered in the next section. We will return to the cognition.run interface too and see how to interact with it in more detail.<br/><br/>
 
 ```{r echo=FALSE, eval=TRUE, results='markup'}
-message(paste("<b>Things might look different</b>",
+message(x = paste("<b>Things might look different</b>",
               "The screenshots above might look different if you are reading this worksheet at a later date. This is because websites change, especially ones that are constantly developing, which also means the cost of using the service might also change.",
               sep = "<br/><br/>"))
 ```
@@ -190,7 +190,7 @@ Probably. There is definitely a learning curve, which will take time to get arou
 No. The great thing about jsPsych is that much of the hard work is already done by others, which means you can get by without worrying about the really complex stuff.
 
 ```{r echo=FALSE, eval=TRUE}
-message(paste("<b>Versions of jsPsych</b>",
+message(x = paste("<b>Versions of jsPsych</b>",
               "You might have noticed that jsPsych has different versions, e.g. 7.3.1, 6.3.0. This is somewhat confusing at first as you would hope that there would be no major differences in which version you are using, or that you would just choose the latest version. However, there are some important differences between the versions that can affect whether your script will work. These are largely based on whether you are using version 6.x.x or 7.x.x",
               "In this tutorial we will be using <b>version 7.3.1</b>",
               "You can see an outline of the differences at <a>https://www.jspsych.org/7.3/support/migration-v7/</a>",
@@ -226,10 +226,10 @@ Comments don't do anything to your actual code, but add information to make it e
 You can write a comment in the code section of the cognition.run interface in the following way:
 
 ```{js}
-/* This is a comment */
+// This is a comment
 ```
 
-These can be as long as you want, but must have `/*` at the start, and `*/` at the end.
+These can be as long as you want, but must have `//` at the start of each new line.
 
 Let's try writing a useful comment in our script, where we say:
 
@@ -239,12 +239,12 @@ Let's try writing a useful comment in our script, where we say:
 - who is the author of the code [your name]
 
 ```{js}
-/*
-Title: My first experiment
-jsPsych version: 7.3.1
-date: [today]
-author: [your name]
-*/
+// --------
+// Title: My first experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
 
 ```
 
@@ -272,7 +272,7 @@ Notice that this is not a comment and has a specific structure, or *syntax*, whi
 - `;` this is a semi-colon, it is an important part of your code as it will allow the script to know that your specific bit of code (or statement) is finished and you can move on to your next one.<br/><br/>
 
 ```{r echo=FALSE, eval=TRUE}
-message(paste("<b>What is a variable?</b><br/><br/>",
+message(x = paste("<b>What is a variable?</b><br/><br/>",
               "See [this](https://www.freecodecamp.org/news/javascript-variables-beginners-guide/) page for more information on what `var` means.<br/><br/>",
               "<b>Choosing a name for your variable</b><br/><br/>",
               "When naming your variable you should follow these rules:<br/><br/>",
@@ -288,9 +288,52 @@ message(paste("<b>What is a variable?</b><br/><br/>",
 
 ```
 
+# 2. Timelines
+
+For our experiment to work we need to add a `timeline`. We use these to store each of the **components** of our experiment, e.g. informed consent, instructions, practice trials, experimental trials, ending message.
+
+The `timeline` is simply the place where we store all of the components, ensuring that they will be presented to the participant in a specific order.
+
+**We would normally create a `timeline` before making the components.**
+
+This can be done by creating a `var` called `timeline` and then the thing that this variable will store is an **empty array**, which is denoted by the `[]`.
+
+Once we have set up the timeline, then we can make the components and **push** them into the timeline array. So our timeline would eventually look like [informed consent, instructions, practice trials, experimental trials, ending message].
+
+```{js }
+var timeline = [];
+```
+
+# 3. Experimental components and plugins
+
+Now we can actually make a component to show to the participant.
+
+Components can be almost anything you can think of, all you need to do is convert your experimental idea into the suitable components. This may take a bit more expertise for really complex experiments, but luckily JsPsych has already done a lot of the work and has a toolbox full of typical components that you would normally need to run an experiment.
+
+To do this we use `plugins`...
+
+If we look at the [JsPsych official documentation](https://www.jspsych.org/7.3/plugins/list-of-plugins/), we can see there are lots of plugins that we can choose to use.
+
+![](images/jspsych_plugins.png)
+
+The documentation page is really nicely written and has examples of each of the plugins, with sensible names so it should be relatively easy to choose the plugin that suits your needs.
+
+We will work through a few of these plugins to demonstrate how they work.
+
+## html-button-response
+
+```{js}
+var trial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: 'Ahoj světe',
+  choices: ['click me!'],
+};
+
+```
+
 
 ```{r echo=FALSE, eval=TRUE}
-message(paste("<b>Important differences between cognition.run and normal jsPsych experiments</b>",
+message(x = paste("<b>Important differences between cognition.run and normal jsPsych experiments</b>",
               "Your experiment in cognition.run will look a but different from other JsPsysch experiments, e.g. the ones you might see that were hosted on private servers. This is because cognition.run does some things automatically, so you do not need to worry about adding specific code.",
               "One of the main differences is that all of the standard JsPsych plugins are automatically loaded for you. We will discuss this later in the worksheet, but if you have used JsPsych before, or are copying code from a non cognition.run experiment you might need to be aware of this.",
               "Essentially, the code you have in your cognition.run experiment will all be javascript, whereas a typical JsPsych experiment will be a html file, with the javascript embedded within that file.",
