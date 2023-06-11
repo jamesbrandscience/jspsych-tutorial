@@ -1,11 +1,11 @@
 ---
-title: "Conducting linguistics research online"
-subtitle: "A practical introduction using jsPsych and cognition.run"
+title: "A practical introduction using jsPsych and cognition.run"
+subtitle: "Session 1 - basics"
 author: "James Brand"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   rmdformats::readthedown:
-    # pandoc_args: "--highlight-style=my.theme"
+    pandoc_args: "--highlight-style=my.theme"
     highlight: pygments
     toc_float: true
     code_download: true
@@ -97,12 +97,28 @@ The worksheet will go through the following sections:
 - Introducing cognition.run
 
     - creating an account
-    - creating a new experiment
+    - considerations when using it
     - familiarisation with the interface
 <br/><br/>
 - Introducing jsPsych
 
-    - 
+    - what it is
+    - considerations when using it
+    - using official documentation
+<br/><br/>
+- Running experiments
+
+    - integrating JsPsych with cognition.run
+    - familiarisation with JsPsych programming
+    - building a very simple experiment
+
+In the next sessions we will cover:
+
+- building a proper experiment
+- using stimuli files
+- customising plugins
+- customising appearance
+- working with the data
 
 ---
 
