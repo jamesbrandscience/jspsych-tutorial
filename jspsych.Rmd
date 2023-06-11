@@ -138,6 +138,8 @@ Not really, once you learn how to use jsPsych the interface is really good for b
 - are looking to host your experiments on your own server
 - generally have more complex experimental designs
 
+![*screenshot from https://www.cognition.run/#features taken on 11th June 2023*](images/cognition_pricing.png)
+
 ### Setting up an account
 
 ```{r echo=FALSE, eval=TRUE}
@@ -201,7 +203,7 @@ message(x = paste("<b>Versions of jsPsych</b>",
 
 ---
 
-# Running experiments
+# 1. Running experiments
 
 In order to run your experiments, you have write code that will tell jsPsych what you want it to do. This requires you to speak the same way as jsPsych, so that your instructions can be interpreted properly.
 
@@ -211,7 +213,7 @@ Imagine you have to guide somebody from point A to point B on a map, you will ha
 
 To run your experiment, you will need somewhere to write your code. We will therefore return to `cognition.run`.
 
-The image below outlines which parts of the interface can be used for different purposes. For now, we will **focus on 1 and 2** of the interface (writing code and previewing how it looks), with 3 and 4 being explained in more detail later.
+The image below outlines which parts of the interface can be used for different purposes. For now, we will **focus on 1 and 3** of the interface (writing code and previewing how it looks), with 3 and 4 being explained in more detail later.
 
 ![](images/cognition7.png)
 
@@ -288,42 +290,64 @@ message(x = paste("<b>What is a variable?</b><br/><br/>",
 
 ```
 
-# 2. Timelines
+## 2. Experimental trials and plugins
 
-For our experiment to work we need to add a `timeline`. We use these to store each of the **components** of our experiment, e.g. informed consent, instructions, practice trials, experimental trials, ending message.
+Now we can actually make a trial to show to the participant.
 
-The `timeline` is simply the place where we store all of the components, ensuring that they will be presented to the participant in a specific order.
-
-**We would normally create a `timeline` before making the components.**
-
-This can be done by creating a `var` called `timeline` and then the thing that this variable will store is an **empty array**, which is denoted by the `[]`.
-
-Once we have set up the timeline, then we can make the components and **push** them into the timeline array. So our timeline would eventually look like [informed consent, instructions, practice trials, experimental trials, ending message].
-
-```{js }
-var timeline = [];
-```
-
-# 3. Experimental components and plugins
-
-Now we can actually make a component to show to the participant.
-
-Components can be almost anything you can think of, all you need to do is convert your experimental idea into the suitable components. This may take a bit more expertise for really complex experiments, but luckily JsPsych has already done a lot of the work and has a toolbox full of typical components that you would normally need to run an experiment.
+Trials can be almost anything you can think of, all you need to do is convert your idea for an experiment into the suitable trials. This may take a bit more expertise for really complex experiments, but luckily JsPsych has already done a lot of the work and has a toolbox full of typical trials that you would normally need to run an experiment.
 
 To do this we use `plugins`...
 
-If we look at the [JsPsych official documentation](https://www.jspsych.org/7.3/plugins/list-of-plugins/), we can see there are lots of plugins that we can choose to use.
+### Introducing plugins
 
-![](images/jspsych_plugins.png)
+Plugins are a key feature of JsPsych, they are outlined really nicely by the official JsPsych [page on plugins](https://www.jspsych.org/7.3/overview/plugins/), which is pasted below:
+
+> In jsPsych, plugins define the kinds of trials or events that should occur during the experiment. Some plugins define very general events, like displaying a set of instructions pages, displaying an image and recording a keyboard response, or playing a sound file and recording a button response. Other plugins are more specific, like those that display particular kinds of stimuli (e.g., a circular visual search array), or run a specific version of particular kind of task (e.g., the Implicit Association Test). Part of creating an experiment with jsPsych involves figuring out which plugins are needed to create the tasks you want your participants to perform.<br/><br/>Plugins provide a structure for a particular trial or task, but often allow for significant customization and flexibility. For example, the image-keyboard-response plugin defines a simple structure for showing an image and collecting a keyboard response. You can specify the what the stimulus is, what keys the participant is allowed to press, how long the stimulus should be on the screen, how long the participant has to respond, and so on. Many of these options have reasonable default values; even though the image plugin has many different parameters, you only need to specify the image stimulus in order to use it. Each plugin has its own documentation page, which describes what the plugin does, what options are available, and what kind of data it collects.
+
+If we look at the [JsPsych official documentation](https://www.jspsych.org/7.3/plugins/list-of-plugins/), we can see there are lots of plugins that we can choose to use.
 
 The documentation page is really nicely written and has examples of each of the plugins, with sensible names so it should be relatively easy to choose the plugin that suits your needs.
 
-We will work through a few of these plugins to demonstrate how they work.
+We will work through a demo of one of these plugins to demonstrate how to implement them.
 
-## html-button-response
+This Google Sheet can also be used as a quick reference point for the different plugins with descriptions of what they can be used for (note that all of the information in this file is taken from the official JsPsych plugin pages, it was simply compiled in this format by me):
+
+https://docs.google.com/spreadsheets/d/11AqZu6KnCaneZmv4iFQ8JuakIShvvzJWqHU5gkcD3fw/edit?usp=sharing
+
+### Plugin parameters
+
+In order to use a plugin we need to set up a trial as a `var` so that we can use it in our experiment. This is done by using code that would look similar to this:
 
 ```{js}
-var trial = {
+var my_trial = {
+  type: 'plugin_name',
+  parameter1: something,
+  parameter2: something_else
+};
+```
+
+The structure of the code inside the {} is important, there will normally be a list of parameters which are predefined by the specific JsPsych plugin you are using, e.g. `type`, followed by a `:`, the information to the right of this is the information relevant to this specific parameter.
+
+You will need to know what parameters to use and the corresponding information to provide in order to make the plugin work as intended.
+
+Some are always likely to be used, e.g. the `type` parameter defines which plugin you want to use for your trial.
+
+The best place to find this information is the JsPsych page for each of the plugins under the `parameters` section.
+
+Below is the page for the `html-button-response` page:
+
+![](images/jspsych_parameters.png)
+
+### Plugin example
+
+The first plugin we will use is essentially a button response. The participant will see a stimulus on the screen and a button underneath it. Once the button is pressed, the trial will end.
+
+To do this we use the `html-button-response` - see the documentation page [here](https://www.jspsych.org/7.3/plugins/html-button-response/).
+
+Below is the code used to create a single trial.
+
+```{js}
+var button_trial = {
   type: jsPsychHtmlButtonResponse,
   stimulus: 'Ahoj světe',
   choices: ['click me!'],
@@ -331,6 +355,29 @@ var trial = {
 
 ```
 
+You can see it has the following structure:
+
+`var`: we use var to declare that we are making a variable
+
+`button_trial`: this is where we define the name for our variable, in this case we are calling it `button_trial`, remember to choose a sensible name for your trial
+
+`=`: this denotes that everything on the right of the equals will be assigned to our button_trial variables
+
+`{}`: this means we can assign multiple values to our variable, instead of just one. Everything inside the {} will be stored as information relevant to our variable.
+
+`type:`:this is the standard way to identify which plugin you want to use for your trial, for any JsPsych trial that uses a specific plugin, you will have to use `type:` followed by the specific plugin name
+
+`jsPsychHtmlButtonResponse`: this is the specific plugin name for a button response
+
+`stimulus:`: this is the standard way to identify what your stimulus will be
+
+`'Ahoj světe'`: this is our stimulus. It is a string/text stimuli, as denoted by the use of `'` around the text. Strings can contain letters, numbers or special characters e.g. 'Ahoj světe1!' will still work as a valid stimulus, see the more info box below for more information on invalid strings
+
+`choices:`: this is the standard way to identify what your button will say
+
+`['click me!']`: this is what the button says in our trial. We again use a text/string for the button label. Note we also use `[]` around the string, this is because a button response trial can take multiple strings, so if you add another string inside the [], e.g. `['click me!', 'do not click me!']`, will give you two buttons
+
+You can see from the parameters documentation that there are a lot more parameters that you can use for this plugin, whereas the example code we have written above is quite simple, but it still works. We will cover more complex trials later.
 
 ```{r echo=FALSE, eval=TRUE}
 message(x = paste("<b>Important differences between cognition.run and normal jsPsych experiments</b>",
@@ -341,11 +388,74 @@ message(x = paste("<b>Important differences between cognition.run and normal jsP
 
 ```
 
+## 3. Timelines
+
+For our experiment to work we need to add a `timeline`. We use these to store each of the **trials** of our experiment, e.g. informed consent, instructions, practice trials, experimental trials, ending message.
+
+The `timeline` is simply the place where we store all of the trials, ensuring that they will be presented to the participant in a specific order.
+
+**We would normally create a `timeline` before making the trials**, but it seemed logical to introduce plugins first for this worksheet.
+
+This can be done by creating a `var` called `timeline` and then the thing that this variable will store is an **empty array**, which is denoted by the `[]`.
+
+Once we have set up the timeline, then we can make the trials and **push** them into the timeline array. So our timeline would eventually look like [informed consent, instructions, practice trials, experimental trials, ending message].
+
+```{js }
+var timeline = [];
+```
+
+Now we have a timeline and a trial, we can **push** the trial into our timeline, so that when we run the experiment, the trial is part of the timeline.
+
+We do this in the following way:
+
+```{js}
+timeline.push(button_trial);
+```
+
+By doing this, our timeline will now look like this: `[button_trial]`, which would be the same as writing `var timeline = [button_trial]`. Normally we would be having many trials in our timeline, so using `push` is a quick and easy way to test and debug specific trials in your timeline.
+
+```{r echo=FALSE, eval=TRUE}
+message(x = paste("<b>Does it have to be called timeline?</b>",
+              "No, you can call your timeline anything you want when declaring it as a var.",
+              "It is important that you know what your timeline will be called though, as this will change the code when you push your trial",
+              "e.g. if you define a timeline called my_timeline, then to push your trial to this array, you will need to use my_timeline.push(button_trial)",
+              sep = "<br/><br/>"))
+
+```
+
+## 4. Running your experiment
+
+You might have noticed in the preview box in cognition.run that you have not seen your experiment yet. This is because there is one last important piece of code that we need in order to let JsPsych know that we are ready to run our timeline.
+
+This is:
+
+```{js}
+jsPsych.run(timeline);
+```
+
+You can see here that we use the `jsPsych` as our first function, then the `.run` part lets JsPsych know that we want to start the experiment. Inside the `()` we write the name of our timeline.
+
+## 5. The full example code
+
+You should now have in your code section your complete code to run a very basic experiment.
+
+This should include:
+
+- Initiating JsPsych
+- Using a plugin to make a trial
+- Creating a timeline and pushing your trial to the timeline
+- Running your timeline
+
+Here is an example of code that should work, if you want to copy and paste it:
 
 ```{r echo=FALSE, eval=TRUE, out.width="90%"}
 knitr::include_url("code_examples/Untitled1.html")
 
 ```
+
+This is how it should look in cognition.run:
+
+![](images/demo_experiment.gif)
 
 
 
