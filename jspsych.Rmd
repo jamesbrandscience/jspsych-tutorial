@@ -1,5 +1,5 @@
 ---
-title: "A practical introduction using jsPsych and cognition.run"
+title: "Using jsPsych and cognition.run"
 subtitle: "Session 1 - basics"
 author: "James Brand"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
