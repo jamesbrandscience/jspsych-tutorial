@@ -38,6 +38,13 @@
   choices: ["next"],
   };
 
+  // make a trial with just a button response, to separate blocks
+  var button_trial1 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: '',
+  choices: ["next block"],
+  };
+
   // make a trial where the timeline variables are from the blocks var, which contains either block1 or block2
   // the order of the blocks is randomised, so at index 0 it will either be block1 or block2
   // the randomize_order ensures the itmes are presented in a random order
@@ -60,7 +67,8 @@
   // push trial_1 and trial_2 to the timeline
   // trial_1 presents either block1 or block2
   // trial_2 presents the remaining block
-  timeline.push(trial_1, trial_2);
+  // button_trial1 is a separator between the blocks
+  timeline.push(trial_1, button_trial1, trial_2); 
 
   // run the experiment
   jsPsych.run(timeline);
