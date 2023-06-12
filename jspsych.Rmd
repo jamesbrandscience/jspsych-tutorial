@@ -387,7 +387,7 @@ You can see it has the following structure:
 
 `stimulus:`: this is the standard way to identify what your stimulus will be
 
-`'Ahoj světe'`: this is our stimulus. It is a string/text stimuli, as denoted by the use of `'` around the text. Strings can contain letters, numbers or special characters e.g. 'Ahoj světe1!' will still work as a valid stimulus, see the more info box below for more information on invalid strings
+`'Ahoj světe'`: this is our stimulus. It is a string/text stimuli, as denoted by the use of `'` around the text. Strings can contain letters, numbers or special characters e.g. 'Ahoj světe1!' will still work as a valid stimulus
 
 `choices:`: this is the standard way to identify what your button will say
 
