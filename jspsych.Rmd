@@ -381,7 +381,7 @@ You can see it has the following structure:
 
 `{}`: this means we can assign multiple values to our variable, instead of just one. Everything inside the {} will be stored as information relevant to our variable.
 
-`type:`:this is the standard way to identify which plugin you want to use for your trial, for any JsPsych trial that uses a specific plugin, you will have to use `type:` followed by the specific plugin name
+`type:`:this is the parameter used to identify which plugin you want to use for your trial, for any JsPsych trial that uses a specific plugin, you will have to use `type:` followed by the specific plugin name
 
 `jsPsychHtmlButtonResponse`: this is the specific plugin name for a button response
 
@@ -389,7 +389,7 @@ You can see it has the following structure:
 
 `'Ahoj světe'`: this is our stimulus. It is a string/text stimuli, as denoted by the use of `'` around the text. Strings can contain letters, numbers or special characters e.g. 'Ahoj světe1!' will still work as a valid stimulus
 
-`choices:`: this is the standard way to identify what your button will say
+`choices:`: this is the parameter used to identify what your button will say
 
 `['click me!']`: this is what the button says in our trial. We again use a text/string for the button label. Note we also use `[]` around the string, this is because a button response trial can take multiple strings, so if you add another string inside the [], e.g. `['click me!', 'do not click me!']`, will give you two buttons
 
@@ -410,7 +410,7 @@ For our experiment to work we need to add a `timeline`. We use these to store ea
 
 The `timeline` is simply the place where we store all of the trials, ensuring that they will be presented to the participant in a specific order.
 
-**We would normally create a `timeline` before making the trials**, but it seemed logical to introduce plugins first for this worksheet.
+**We would normally create a **`timeline` **before making the trials**, but it seemed logical to introduce plugins first for this worksheet.
 
 This can be done by creating a `var` called `timeline` and then the thing that this variable will store is an **empty array**, which is denoted by the `[]`.
 
