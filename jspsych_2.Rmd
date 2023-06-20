@@ -1,0 +1,162 @@
+---
+title: "Using jsPsych and cognition.run"
+subtitle: "Session 2 - intermediate"
+author: "James Brand"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  rmdformats::readthedown:
+    pandoc_args: "--highlight-style=my.theme"
+    highlight: pygments
+    toc_float: true
+    code_download: true
+    toc_depth: 3
+    collapsed: false
+    df_print: paged
+    lightbox: TRUE
+    gallery: TRUE
+    css: "css/style.css"
+    
+---
+
+```{r echo=FALSE, warning=FALSE}
+library(slickR)
+library(htmltools)
+library(xaringanExtra)
+library(rmarkdown)
+library(fontawesome)
+library(bsplus)
+
+```
+
+```{r setup, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      eval = FALSE,
+                      comment = NA)
+
+knitr::knit_hooks$set(
+  message = function(x, options) {
+     paste('<button type="button" class="collapsible1"><strong>',
+     fa(name = "circle-info"),
+     ' more info</strong></button>', '<div class="content1"><p>',
+     gsub('##', '\n', x),
+     '</p></div>',
+     sep = '\n')
+   })
+
+codeblock = function(x, options) {
+     cat(paste('<div class="codeblock">',
+     paste0(x),
+     '</div>',
+     sep = '\n'))
+   }
+
+```
+
+---
+
+## `r fa("language")` Translations available
+
+Disclaimer: may not be very accurate...
+
+<div id="google_translate_element"></div>
+
+---
+
+# Worksheet overview
+
+## `r fa("crosshairs")` Aims
+
+By the end of this worksheet you should be able to:
+
+- **program** your own experiments in jsPsych
+- **host** the experiment online using cognition.run
+- **use** the participant data for analysis
+- **apply** the basic skills you have learnt for your own purposes
+- **learn** some extra skills such as HTML, javascript, CSS and JSON
+
+## `r fa("user-graduate")` Pre-requisites
+
+To complete the aims you will need to:
+
+- **follow** this worksheet
+- **ask** questions if you are not sure/be able to google
+- **have** a working computer and internet connection
+- **be patient** when things do not work
+
+You do not need to:
+
+- have any **programming knowledge**
+- have high **computer literacy**
+- know anything about **jsPsych, cognition.run, html, css or javascript**
+- be a **linguist**
+
+## `r fa("folder-tree")` Structure
+
+The worksheet will go through the following sections:
+
+- Introducing cognition.run
+
+    - creating an account
+    - considerations when using it
+    - familiarisation with the interface
+<br/><br/>
+- Introducing jsPsych
+
+    - what it is
+    - considerations when using it
+    - using official documentation
+<br/><br/>
+- Running experiments
+
+    - integrating JsPsych with cognition.run
+    - familiarisation with JsPsych programming
+    - building a very simple experiment
+
+In the next sessions we will cover:
+
+- building a proper experiment
+- using stimuli files
+- customising plugins
+- customising appearance
+- working with the data
+
+---
+
+
+
+
+
+
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+htmltools::tags$script(src = "js/translate.js")
+# htmltools::tags$script(src = "js/infobox.js")
+htmltools::tags$script(src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit")
+
+htmltools::tagList(
+  xaringanExtra::use_clipboard(
+    button_text = "<i class=\"fa fa-clipboard\" style=\"font-size: 25px\"></i>",
+    success_text = "<i class=\"fa fa-check\" style=\"color: #90BE6D; font-size: 25px\"></i>",
+  ),
+  rmarkdown::html_dependency_font_awesome()
+)
+
+```
+
+```{js echo=FALSE, eval=TRUE}
+var coll = document.getElementsByClassName("collapsible1");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active1");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+
+```
