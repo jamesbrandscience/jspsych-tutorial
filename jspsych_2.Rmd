@@ -112,6 +112,8 @@ The worksheet will go through the following sections:
     - familiarisation with JsPsych programming
     - building a very simple experiment
 
+## `r fa("arrow-right")` Up next
+
 In the next sessions we will cover:
 
 - building a proper experiment
@@ -120,7 +122,18 @@ In the next sessions we will cover:
 - customising appearance
 - working with the data
 
+## `r fa("backward")` Recap
+
+In the last session we should have:
+
+- set up an account for cognition.run
+- become familiar with the cognition.run interface
+- become familiar with JsPsych
+- learnt what a plugin is and how they work
+- built a very simple experiment
+
 ---
+
 
 
 
