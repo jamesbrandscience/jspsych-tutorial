@@ -94,35 +94,36 @@ You do not need to:
 
 The worksheet will go through the following sections:
 
-- Introducing cognition.run
+- Building a lexical decision experiment
 
-    - creating an account
-    - considerations when using it
-    - familiarisation with the interface
+    - using a keyboard response plugin
+    - customising the stimuli with CSS
+    - customising the plugin parameters
+    - combining trials into a timeline
 <br/><br/>
-- Introducing jsPsych
+- Timeline variables
 
-    - what it is
-    - considerations when using it
-    - using official documentation
+    - how to use them
+    - adding variables to your results data
+    - formatting files from csv to javascript/json in R
 <br/><br/>
-- Running experiments
+- Completing your experiment
 
-    - integrating JsPsych with cognition.run
-    - familiarisation with JsPsych programming
-    - building a very simple experiment
+    - adding instruction and consent pages
+    - collecting demographic information
+    - adding random participant IDs
 
-## `r fa("arrow-right")` Up next
+<!-- ## `r fa("arrow-right")` Up next -->
 
-In the next sessions we will cover:
+<!-- In the next sessions we will cover: -->
 
-- building a proper experiment
-- using stimuli files
-- customising plugins
-- customising appearance
-- working with the data
+<!-- - building a proper experiment -->
+<!-- - using stimuli files -->
+<!-- - customising plugins -->
+<!-- - customising appearance -->
+<!-- - working with the data -->
 
-## `r fa("backward")` Recap
+## `r fa("lightbulb")` Recap
 
 In the last session we should have:
 
@@ -133,6 +134,351 @@ In the last session we should have:
 - built a very simple experiment
 
 ---
+
+# Building a lexical decision experiment
+
+One of the most common measurements collected in experiments are reaction times (rt). In this section we will be using a keyboard response plugin, i.e. where the participant presses a specific key on their keyboard in response to a stimuli in order to measure how long it takes the participant to respond.
+
+The paradigm that we will use to practice using this plugin will be the **lexical decision task**, where a word or non-word will be presented on the screen and the participant has to respond to the stimuli with one of two key options, they will press `key1` if they think the word is real, `key2` if they think the word is not real.
+
+## the html-keyboard-response plugin
+
+The basic structure of the `html-keyboard-response` plugin is:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'my_stimulus',
+  choices: ['key1', 'key2', 'key_n']
+}
+
+```
+
+If we used this in a full experiment in cognition.run, we would just see `my_stimulus` on the screen and it would just wait for a valid keyboard response from the participant.
+
+- The `type` parameter declares which plugin to use, here we are using the `jsPsychHtmlKeyboardResponse` plugin
+
+- The `stimulus` parameter declares what stimulus to present, here we just use the string `'my_stimulus'`
+
+- The `choices` parameter declares which keys are valid for the trial, here we use an array, as shown by the `[` and `]` at the start and end. The strings `'key1'`, `'key2'` and `'key_n'` are not actually valid keys and would not be recognised by jspsych, they are just for generalisation. Instead, we would probably use something like `['a', 'b', 'c']` if we wanted to allow responses only from the keys `a`, `b` and `c`.<br/><br/>**Note**<br/>If you want to allow **all possible keys**, we would use `choices: 'ALL_KEYS'`.<br/><br/>If you want to **prevent all keys** from being allowed, we would use `choices: 'NO_KEYS'`.<br/><br/>If you are unsure how to specify the key you want, refer to https://docs.google.com/spreadsheets/d/19v9OGreNGmmOAacJ33cSrouNO_OfBxqa4hiXTwex5dY/edit?usp=sharing
+
+For this tutorial, we will make the following trial as the basis for our lexical decision experiment:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h']
+}
+```
+
+We now have the stimulus as `word` and the choices as `d` or `h`.
+
+Remember, that if we want to preview all of our experiment in cognition.run, we need to have a fully working jspsych code, so the full code we would need is:
+
+```{js}
+// --------
+// Title: lexical decision experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+var jsPsych = initJsPsych();
+
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h']
+}
+
+var timeline = [];
+
+timeline.push(my_keyboard_trial);
+
+jsPsych.run(timeline);
+
+```
+
+This is what it should look like in cognition.run:
+
+![](images/word_trial.png)
+
+## customising the stimulus with CSS
+
+Our stimulus may not look how we want it to look, e.g. the font, colour, size etc might not be the preferred style for our experiment.
+
+This is because jspsych has certain default values for the appearance of things like text. But, it can easily be modified with some extra code.
+
+This is based on CSS (Cascading Style Sheets), which allows html to be styled in a specific way. We will cover CSS in more detail later, but it is quite a large topic and is a separate language to html and javascript, so it is not within the scope of this level of tutorial to cover it thoroughly now.
+
+What we will do is apply some basic CSS styling to our stimulus, to demonstrate how to customise some aspects of the appearance. Crucially, this can be done within some basic html code. This keeps things simple.
+
+Currently, our stimulus is `'word'`, which is presented with the following defaults:
+
+- font-family: Arial;
+- font-size: 18px;
+- color: black;
+- font-weight: normal;
+
+If we want to change any of this, or indeed anything else about the appearance, we need to add some inline css to the stimulus.
+
+We can do this by modifying the stimulus to look more like html with css:
+
+```{js}
+stimulus: '<div>word</div>
+
+```
+
+You will see the added `<div>` and `</div>` at the start and end of the word.
+
+This is html.
+
+It identifies the text as a `content division element`. Note that there is `<div>` at the start to indicate the start of the content and a `</div>` a the end to indicate the end of the content. Nothing really changes at the moment as jspsych already defines the text in this way by default.
+
+However, what we can now do is add css to our div. We do this in the following way:
+
+```{js}
+stimulus: '<div style="color:red;">word</div>
+
+```
+
+Now we have added some css to our html object. This is done by the `style="color:red"` part.
+
+When adding css directly to html in this way, we first have to declare that we want to style the specific element, in this example the text contained in our `div`. Therefore it goes within the starting `<div>`.
+
+It is evaluated as css by the `style` function, with different elements of the styling being declared within the `" "` after the `=`.
+
+In the above example, we change the css of the text `color` to `red`. Note the `;` which we use to indicate the end of the color parameter changes.
+
+We can now use this basic structure to change other parameters related to the styling of the text in our div element.
+
+```{js}
+stimulus: '<div style="color:red; background: pink; font-size: 30pt; font-family: monospace; font-weight: bold; position: absolute; top: 0px; left: 0;">word</div>
+
+```
+
+Now we have the following parameters declared:
+
+- `colour: red` makes the text color red, you can use [color names](https://htmlcolorcodes.com/color-names/) or [hex codes](https://htmlcolorcodes.com/color-picker/) e.g. #00000 is black
+- `background: pink` makes the text background pink, again you can use color names or hex codes
+- `font-size: 30pt` makes the text size 30 point, you can also specify other [units](https://www.digitalocean.com/community/tutorials/css-css-units-explained)
+- `font-family: monospace` makes the font monospace, other [web safe fonts](https://www.w3schools.com/cssref/css_websafe_fonts.php) can be used
+- `font-weight: bold` makes the font bold, other [weights](https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight) can be used
+- `position: absolute` makes the positioning of the text absolute in relation to the screen, it needs additional parameters to be specified such as top, right, bottom or left
+- `top: 0px` makes the absolute positioning to be 0px from the top
+- `left: 0px` makes the absolute positioning to be 0px from the left
+
+This is what it should like:
+
+![](images/word_trial_css.png)
+
+## customising the plugin parameters
+
+As we do not really need much styling to our stimuli, we will return to the original defaults of:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h']
+}
+
+```
+
+However, what we can do is change specific parameters of our trial.
+
+If we refer to the plugin documentation on the jspsych website - https://www.jspsych.org/7.0/plugins/html-keyboard-response/ we can see that there are many other parameters that we can modify with this plugin.
+
+### prompt
+
+We might for example want to include a `prompt` if the trials are practice trials, so the participant can be reminded of which keys to press:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: 'press "d" if you think it is a real word, press "h" if you think it is not a real word'
+}
+
+```
+
+As you can see, the prompt is displayed in a quite inconvenient position. So we can now modify this using the html and css code we used previously:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
+}
+
+```
+
+Now, we have changed the font size to `10pt` so it is smaller than the stimulus text.
+
+We have also change the `position`, this time using `position:relative; bottom:150px`, unlike in the previous example where we used `position:absolute`, the use of `relative` means we move relative to where it was originally placed, so in this example we move it `150px` from the `bottom`, i.e. 150px vertically upwards from the bottom.
+
+This is how it should now look:
+
+![](images/word_trial_prompt.png)
+
+### stimulus_duration
+
+We might also want to only show the stimulus on the screen for a specified amount of time. To do this, we can add the `stimulus_duration` parameter:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  stimulus_duration: 500
+}
+
+```
+
+In the example above, we have set this parameter to `500`, which means that the stimulus will be shown only for 500ms. Note that the trial does not finish until a response has been made.
+
+### trial_duration
+
+If we want to make the trial end after a specified time, we can also add the `trial_duration` parameter:
+
+```{js}
+var my_keyboard_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  stimulus_duration: 500,
+  trial_duration: 1000
+}
+
+```
+
+Now, the trial will end after `1000ms` or if there is a response by the participant in within the specified time.
+
+This is how it should look:
+
+![](images/word_trial_duration.gif)
+
+## combining trials into a timeline
+
+At the moment our experiment comprises of just one trial..., which is not particularly useful. However, what we have covered so far should allow us to put together the building blocks of an experiment.
+
+In this section we will combine multiple trials into a timeline that is nested within our main timeline.
+
+This will involve adding a new variable that has a `fixation trial`, so that our lexical decision trial is preceeded by this fixation trial.
+
+Lets first make the lexical decision trial, we will keep it as just a keyboard response with no duration parameters:
+
+```{js}
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
+}
+
+```
+
+Now we will make the fixation trial, which will show a `+` stimulus on the screen for a set amount of time, in this case `2000ms`.
+
+Note the `font-size` is set to 30pt and the choices is `NO_KEYS`, this mean we will just see the `+` on the screen and there will be no keys that end the trial, just the time limit of `2000ms`:
+
+```{js}
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000
+}
+
+```
+
+We can now make a new variable called `lexical_decision_combined`, this will combine the `fixation_trial` and the `lexical_decision_trial` in a specified order, within a specified timeline.
+
+We do this using the `timeline` parameter, which we can specify within a standard `var`.
+
+We assign the timeline an array, `[fixation_trial, lexical_decision_trial]`, which means that the timeline will first show the `fixation_trial`, then the `lexical_decision_trial`. If we changed the positions of the items in the array this will change the order of the presentation.
+
+```{js}
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial]
+}
+
+```
+
+If we now push `lexical_decision_combined` to our timeline, using the `timeline.push`, we should see that it presents the two trials together.
+
+This is how your code should look so far:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+var jsPsych = initJsPsych();
+
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000
+}
+
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: 'word',
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
+};
+
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial]
+}
+
+
+var timeline = [];
+timeline.push(lexical_decision_combined);
+
+jsPsych.run(timeline);
+```
+
+
+# Timeline variables
+
+The experiment is not really an experiment so far, it presents just one word...
+
+So what we will focus on now is using larger stimuli sets, and using them within our timeline.
+
+This means we can iterate through a list of stimuli, presenting them to the participant and collecting their responses during each trial.
+
+## how does jspsych read stimuli files
+
+An important thing to note about jspsych is that you can not just give it a csv or excel formatted file containing your stimuli. Instead, jspsych and javascript more generally, prefers to use JSON formatted files.
+
+So an important concept to learn is how to work with this type of file.
+
+Here is a framework example of what JSON formatted data looks like:
+
+```{js}
+var stimuli = [
+    {"item": "first_item", "value":"1"},
+    {"item": "second_item", "value":"2"},
+    {"item": "third_item", "value":"3"},
+    {"item": "fourth_item", "value":"4"}
+];
+
+```
+
+
 
 
 
