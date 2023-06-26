@@ -150,7 +150,7 @@ var my_keyboard_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: 'my_stimulus',
   choices: ['key1', 'key2', 'key_n']
-}
+};
 
 ```
 
@@ -169,7 +169,8 @@ var my_keyboard_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: 'word',
   choices: ['d', 'h']
-}
+};
+
 ```
 
 We now have the stimulus as `word` and the choices as `d` or `h`.
@@ -190,7 +191,7 @@ var my_keyboard_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: 'word',
   choices: ['d', 'h']
-}
+};
 
 var timeline = [];
 
@@ -282,7 +283,7 @@ var my_keyboard_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: 'word',
   choices: ['d', 'h']
-}
+};
 
 ```
 
@@ -300,7 +301,7 @@ var my_keyboard_trial = {
   stimulus: 'word',
   choices: ['d', 'h'],
   prompt: 'press "d" if you think it is a real word, press "h" if you think it is not a real word'
-}
+};
 
 ```
 
@@ -312,7 +313,7 @@ var my_keyboard_trial = {
   stimulus: 'word',
   choices: ['d', 'h'],
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
-}
+};
 
 ```
 
@@ -335,7 +336,7 @@ var my_keyboard_trial = {
   choices: ['d', 'h'],
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
   stimulus_duration: 500
-}
+};
 
 ```
 
@@ -353,7 +354,7 @@ var my_keyboard_trial = {
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
   stimulus_duration: 500,
   trial_duration: 1000
-}
+};
 
 ```
 
@@ -379,7 +380,7 @@ var lexical_decision_trial = {
   stimulus: 'word',
   choices: ['d', 'h'],
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
-}
+};
 
 ```
 
@@ -394,7 +395,7 @@ var fixation_trial = {
   choices: 'NO_KEYS',
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
   trial_duration: 2000
-}
+};
 
 ```
 
@@ -407,7 +408,7 @@ We assign the timeline an array, `[fixation_trial, lexical_decision_trial]`, whi
 ```{js}
 var lexical_decision_combined = {
   timeline: [fixation_trial, lexical_decision_trial]
-}
+};
 
 ```
 
@@ -431,7 +432,7 @@ var fixation_trial = {
   choices: 'NO_KEYS',
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
   trial_duration: 2000
-}
+};
 
 var lexical_decision_trial = {
   type: jsPsychHtmlKeyboardResponse,
@@ -442,13 +443,13 @@ var lexical_decision_trial = {
 
 var lexical_decision_combined = {
   timeline: [fixation_trial, lexical_decision_trial]
-}
-
+};
 
 var timeline = [];
 timeline.push(lexical_decision_combined);
 
 jsPsych.run(timeline);
+
 ```
 
 
@@ -462,6 +463,8 @@ This means we can iterate through a list of stimuli, presenting them to the part
 
 ## how does jspsych read stimuli files
 
+### introducing JSON
+
 An important thing to note about jspsych is that you can not just give it a csv or excel formatted file containing your stimuli. Instead, jspsych and javascript more generally, prefers to use JSON formatted files.
 
 So an important concept to learn is how to work with this type of file.
@@ -470,13 +473,270 @@ Here is a framework example of what JSON formatted data looks like:
 
 ```{js}
 var stimuli = [
-    {"item": "first_item", "value":"1"},
-    {"item": "second_item", "value":"2"},
-    {"item": "third_item", "value":"3"},
-    {"item": "fourth_item", "value":"4"}
+    {"variable_name1": "first_item", "variable_name2":"1"},
+    {"variable_name1": "second_item", "variable_name2":"2"},
+    {"variable_name1": "third_item", "variable_name2":"3"},
+    {"variable_name1": "fourth_item", "variable_name2":"4"}
 ];
 
 ```
+
+As a csv or excel file this would look like this:
+
+```{r warning=FALSE, echo=FALSE, eval=TRUE}
+# library(tidyverse)
+library(DT)
+
+```
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+datatable(data.frame(variable_name1 = c("first_item", "second_item", "third_item", "fourth_item"),
+                 variable_name2 = c(1, 2, 3, 4)), rownames = FALSE, filter = "none", autoHideNavigation = TRUE, options = list(dom = 't'))
+
+```
+
+In the `stimuli` variable above, we have a very specific way of coding the data:
+
+- everything is stored in an `array`, i.e. we use `[` and `]` around the information, this will allow jspsych to understand everything in a way similar to each item in the array being like a row in a csv or excel file
+
+- each `item` in the array is enclosed in `{` and `}`, the information within each of these items is essentially like a row of data. Each item is separated by a `,`
+
+- the structure of the items is `"variable_name1":"value"`, which means the variable name is specified as a string, i.e. `" "` followed by a `:`, with the corresponding value following, also normally specified as a string. The next variable follows the same structure, with new variables separated by a `,`
+
+- in order for jspsych to read the information in a JSON formatted object, we need to assign it as a `var`, e.g. `var stimuli = `
+
+### timeline variables
+
+As mentioned before, we probably want our experiment to iterate through a list of stimuli, presenting those stimuli within a timeline.
+
+To do this, we can use the `timeline_variables` parameter. This is normally done in a var that contains a timeline, e.g. like the `lexical_decision_combined` var we made previously.
+
+First lets make some example stimuli suitable for a lexical decision task:
+
+```{js}
+var stimuli = [
+    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
+    {"item": "axaj", "real_word":"no", "correct_key":"h"},
+    {"item": "světe", "real_word":"yes", "correct_key":"d"},
+    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+];
+
+```
+
+Here the stimuli have three variables:
+
+- `item` the stimuli to be presented during the trial
+- `real_word` whether the word is considered to be real or not
+- `correct_key` the key the expect the participant to respond with, where `d` is a real word and `h` is a non-word
+
+Now we can use this var for our `timeline_variables` parameter:
+
+```{js}
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli
+};
+
+```
+
+The next step is to update the `stimuli` parameter in the `lexical_decision_trial` var:
+
+```{js}
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
+};
+
+```
+
+One thing you might have noticed is that the stimuli are presented in the same order as they are specified in the `stimuli` this is because if we want the presentation order to be randomised, we need to add an extra parameter to our `lexical_decision_combined` var. This is `randomize_order`, which we can set to `true`:
+
+```{js}
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+```
+
+Now we have a randomised version of our lexical decision experiment, using the stimuli stored in the `stimuli` var, where we iterate through the stimuli, presenting a fixation and then the lexical decision trial.
+
+This is what it should look like:
+
+![](images/lexical_decision1.gif)
+
+
+## understanding the results
+
+### inspecting the data
+
+Now we have a working lexical decision experiment, it might be worth looking at the results.
+
+We can do this in cognition.run by looking at the **bottom right box**:
+
+![](images/lexical_decision_data.png)
+
+As you complete trials in the experiment, it will add a new row of data to this section. So every time you advance in the experiment, the data is stored automatically.
+
+It is easy to have a quick look at the data using this box, but you can also `download` it as a csv file using the `download` button. Which should give you a file called `demo_preview.csv`.
+
+If you open this in excel or R you should see something like this:
+
+![](images/lexical_decision_data_csv.png)
+
+There should be 18 columns and 8 rows of data, we can quickly inspect what these are:
+
+The key variables to consider are:
+
+- `rt` this is the reaction time measured in ms
+- `stimulus` this is the stimulus shown to the participant, including any html
+- `response` this is the recorded value for the trial, in this example it will be the key pressed
+- `trial_type` this is the plugin used
+- `trial_index` this is the trial number, it increases sequentially after each trial
+- `time_elapsed` this is the duration of the experiment, recorded at the end of each trial, it is cumulative
+
+All the other variables are quite technical:
+- `internal_node_id` this is a way to distinguish between different parts of the experiment
+- `run_id` this is the id of the individual attempt at the experiment
+- `condition` this is the condition assigned to the participant
+- `recorded_at` this is the date and time of the recorded data
+- `source_code_version` this is probably something related to cognition.run
+- `ip` this is the ip address of the participant
+- `user_agent` this contains the details of the browser being used by the participant
+- `device` this is the make of the computer being used by the participant
+- `browser` this is the browser being used by the participant
+- `browser_version` this is the version of the browser being used by the participant
+- `platform` this is the operating system being used by the participant
+- `platform_version` this is the version of the operating system being used by the participant
+
+If we look at the `rt` column, we can see that there are values for our lexical decision trials. In the `stimulus` column we can see which item was being responded to, e.g. `světe` had a rt of `571` in the above screenshot.
+
+Note that data for the fixation trials will also be stored as a row, even though we might not actually need it for analysis.
+
+### adding variables to our results
+
+What would be helpful however, is to add new columns to our data, such as the additional ones in our `stimuli` var.
+
+To do this, we need to add some extra parameters to our `lexical_decision_trial` var, specifically a `data` parameter:
+
+```{js}
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  data: {
+    task: 'lexical_decision',
+    real_word: jsPsych.timelineVariable('real_word'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+    }
+};
+
+```
+
+The format of this parameter takes an object format, so the information needs to have `{` and `}` around the information.
+
+Now we can define the variables to be stored in the data:
+
+- `task` will store just a string of `lexical_decision` for all of these trials
+- `real_word` will store the value in our timeline variable relating to the `real_word` variable, so in this example it will be either `yes` or `no`
+- `correct_key` will again store the value in our timeline variable, but for the `correct_key` variable, so in this example either `d` or `h`
+
+The names of the variables in our data object can be anything you choose, assuming they are valid names, i.e. no spaces etc. if you are wanting to store something from the timeline_variables var, you must use `jsPsych.timlineVariable()` with the name of the specific variable you want to refer to inside the brackets, written as a string, e.g. `'real_word'`.
+
+Now lets add some data to our fixation trial too, so we can distinguish it from the lexical decision trial in the `task` variable:
+
+```{js}
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000,
+  data: {
+    task: 'fixation'
+  }
+};
+
+```
+
+Now if we complete the experiment and look at the data, we should see (note: I have removed some columns for ease of reading the screenshot, the new variables stored in the data will be at the right of the csv after `platform_version`):
+
+![](images/lexical_decision_data_csv2.png)
+
+The full code should be:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+// inititate jspsych
+var jsPsych = initJsPsych();
+
+// create a var containing the stimuli in JSON format
+var stimuli = [
+    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
+    {"item": "axaj", "real_word":"no", "correct_key":"h"},
+    {"item": "světe", "real_word":"yes", "correct_key":"d"},
+    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+];
+
+// make a fixation trial
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000
+  data: {
+    task: 'fixation'
+  }
+};
+
+// make a lexical decision trial
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  data: {
+    task: 'lexical_decision',
+    real_word: jsPsych.timelineVariable('real_word'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+    }
+};
+
+// make a variable which combines the fixation and lexical decision together
+// use stimuli as timeline_variables and randomise the presentation order
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+// set up main timeline
+var timeline = [];
+
+// push the lexical_decision_combined variable to the timeline
+timeline.push(lexical_decision_combined);
+
+//run the experiment
+jsPsych.run(timeline);
+
+```
+
+## formatting files from csv to javascript/JSON in R
+
+
+
+
 
 
 
