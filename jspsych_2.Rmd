@@ -768,6 +768,7 @@ There should be 20 rows: 10 of which are real words and the other 10 are non-wor
 The data should look like this:
 
 ![](images/stimuli_csv.png)
+
 ### 2. Export to csv
 
 If you are working with your own file, export it as a .csv file, preferably with utf-8 encoding.
