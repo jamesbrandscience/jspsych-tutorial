@@ -31,7 +31,9 @@ library(bsplus)
 ```{r setup, warning=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       eval = FALSE,
-                      comment = NA)
+                      comment = NA,
+                      message = FALSE,
+                      warning = FALSE)
 
 knitr::knit_hooks$set(
   message = function(x, options) {
@@ -734,15 +736,212 @@ jsPsych.run(timeline);
 
 ## formatting files from csv to javascript/JSON in R
 
+One annoying thing about all this, is the idea of having to reformat all your stimuli to a javascript variable in JSON format, which may be an unfamiliar format and most researchers use excel or R to prepare their stimuli files in csv format.
+
+There is a solution to this problem by using R!
+
+There is a great package called `jsonlite` which is really useful for working with data in json format. This means we can easily format a csv file to json and save it as a javascript var with just a few lines of code.
+
+You can read more about jsonlite [here](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-aaquickstart.html).
+
+So our workflow will be this:
+
+1. create a stimuli file in the traditional way, e.g. using excel or other spreadsheet style software
+2. export that file to .csv format
+3. load in useful packages
+4. load that file in to R
+5. convert the R version of the data to JSON using the toJSON function
+6. add some text to make it a javascript object
+7. export that file to .js format
+8. upload it as an `external JS/CSS file in cognition.run
+9. use the var as a timeline variable
+
+### 1. create a stimuli file
+
+Open up a spreadsheet software and make your stimuli file.
+
+In this worksheet we will continue with the lexical decision style stimuli, i.e. words and non-words.
+
+There should be 3 columns: `item`, `real_word` and `correct_key`
+There should be 20 rows: 10 of which are real words and the other 10 are non-words
+
+The data should look like this:
+
+![](images/stimuli_csv.png)
+### 2. Export to csv
+
+If you are working with your own file, export it as a .csv file, preferably with utf-8 encoding.
+
+Alternatively, you can download the file
+[here](lexical_decision_stimuli.csv), it should be saved as `lexical_decision_stimuli.csv`
+
+### 3. load in packages
+
+Open up RStudio or R on your computer and open a new R script.
+
+You will need the `jsonlite` the `tidyverse` packages installed and loaded in to R.
+
+If you have not got any of these installed, first run this code:
+
+```{r eval=FALSE, echo=TRUE}
+install.packages("jsonlite")
+install.packages("tidyverse")
+
+```
+
+Once you have them installed, you should now load them in to R:
+
+```{r eval=TRUE, echo=TRUE}
+library(jsonlite)
+library(tidyverse)
+
+```
+
+### 4. load in to R
+
+Now store the file as an object called `lexical_decision_stimuli`, you will have to use the full file path, e.g. "downloads/lexical_decision_stimuli.csv" or you can set the working directory to where the file is saved.
+
+```{r eval=TRUE, echo=TRUE}
+lexical_decision_stimuli <- read_csv("lexical_decision_stimuli.csv")
+  
+```
+
+### 5. convert to JSON
+
+We will now be able to use the `toJSON` function.
+
+We will assign the json version to an object called `lexical_decision_stimuli_JSON`.
+
+The `toJSON` function takes as the first argument your data, so in this case `lexical_decision_stimuli`.
+
+We use the additional argument `pretty=TRUE` to make the output look pretty and easy to read.
+
+```{r eval=TRUE, echo=TRUE}
+lexical_decision_stimuli_JSON <- toJSON(lexical_decision_stimuli, pretty=TRUE)
+
+lexical_decision_stimuli_JSON
+
+```
+
+We now have JSON formatted data!
+
+### 6. make into javascript var
+
+You will see there is no `var` assignment in the `lexical_decision_stimuli_JSON` object, it is just text.
+
+But we can add this information quite easily using the `paste0` function:
+
+```{r eval=TRUE, echo=TRUE}
+lexical_decision_stimuli_JSON <- paste0("var stimuli = ", lexical_decision_stimuli_JSON, ";")
+
+lexical_decision_stimuli_JSON
+
+```
+
+We should now see that the start of the text has `var stimuli = `, followed by the JSON formatted data, and finally the text ends with a `;`.
+
+### 7. export that file to javascript
+
+Now we have the data formatted correctly, we can save the file using the `write_file` function, note that you should specify the exact file path of where you want the `file` to be saved:
+
+```{r eval=TRUE, echo=TRUE}
+write_file(x = lexical_decision_stimuli_JSON, file = "lexical_decision_stimuli_JSON.js")
+
+```
+
+You should now see the file in your folder, importantly this is a `js` or javascript file.
+
+You can download this file [here](lexical_decision_stimuli_JSON.js), in case you had problems with running the R code.
+
+It should look like this:
+
+![](images/lexical_decision_stimuli_JSON.png)
+
+### 8. upload that file to cognition.run
+
+You will see in cognition.run that there is an option to upload `external JS/CSS`, this is how we will now upload our stimuli file to the experiment.
+
+![](images/cognition_js_upload.png)
+
+Click on the `browse` button and find the `lexical_decision_stimuli_JSON.js` file.
+
+Once it has been uploaded, you should see it appear underneath the browse button.
+
+### 9. using the stimuli as a timeline_variable
+
+Notice that we probably still have the following code in our script:
+
+```{js}
+var stimuli = [
+    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
+    {"item": "axaj", "real_word":"no", "correct_key":"h"},
+    {"item": "světe", "real_word":"yes", "correct_key":"d"},
+    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+];
+
+```
+
+This means that our new stimuli will be overwritten by this section of the code. This is because we named our new stimuli var `stimuli`.
+
+To resolve this issue, and use our new stimuli, we need to **delete** the above code in our script.
+
+This means our final code should be:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+// inititate jspsych
+var jsPsych = initJsPsych();
+
+// make a fixation trial
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000,
+  data: {
+    task: 'fixation'
+  }
+};
+
+// make a lexical decision trial
+var lexical_decision_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  data: {
+    task: 'lexical_decision',
+    real_word: jsPsych.timelineVariable('real_word'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+    }
+};
+
+// make a variable which combines the fixation and lexical decision together
+// use stimuli as timeline_variables and randomise the presentation order
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+// set up main timeline
+var timeline = [];
+
+// push the lexical_decision_combined variable to the timeline
+timeline.push(lexical_decision_combined);
+
+//run the experiment
+jsPsych.run(timeline);
 
 
-
-
-
-
-
-
-
+```
 
 
 
