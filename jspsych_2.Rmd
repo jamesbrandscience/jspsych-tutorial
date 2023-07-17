@@ -463,9 +463,7 @@ So what we will focus on now is using larger stimuli sets, and using them within
 
 This means we can iterate through a list of stimuli, presenting them to the participant and collecting their responses during each trial.
 
-## how does jspsych read stimuli files
-
-### introducing JSON
+## introducing JSON
 
 An important thing to note about jspsych is that you can not just give it a csv or excel formatted file containing your stimuli. Instead, jspsych and javascript more generally, prefers to use JSON formatted files.
 
@@ -507,7 +505,7 @@ In the `stimuli` variable above, we have a very specific way of coding the data:
 
 - in order for jspsych to read the information in a JSON formatted object, we need to assign it as a `var`, e.g. `var stimuli = `
 
-### timeline variables
+## introducing timeline variables
 
 As mentioned before, we probably want our experiment to iterate through a list of stimuli, presenting those stimuli within a timeline.
 
@@ -571,9 +569,9 @@ This is what it should look like:
 ![](images/lexical_decision1.gif)
 
 
-## understanding the results
+# Understanding the results
 
-### inspecting the data
+## inspecting the data
 
 Now we have a working lexical decision experiment, it might be worth looking at the results.
 
@@ -618,7 +616,7 @@ If we look at the `rt` column, we can see that there are values for our lexical 
 
 Note that data for the fixation trials will also be stored as a row, even though we might not actually need it for analysis.
 
-### adding variables to our results
+## adding variables to our results
 
 What would be helpful however, is to add new columns to our data, such as the additional ones in our `stimuli` var.
 
@@ -734,7 +732,7 @@ jsPsych.run(timeline);
 
 ```
 
-## formatting files from csv to javascript/JSON in R
+# Formatting files from csv to javascript/JSON in R
 
 One annoying thing about all this, is the idea of having to reformat all your stimuli to a javascript variable in JSON format, which may be an unfamiliar format and most researchers use excel or R to prepare their stimuli files in csv format.
 
@@ -769,7 +767,7 @@ The data should look like this:
 
 ![](images/stimuli_csv.png)
 
-### 2. Export to csv
+### 2. export to csv
 
 If you are working with your own file, export it as a .csv file, preferably with utf-8 encoding.
 
