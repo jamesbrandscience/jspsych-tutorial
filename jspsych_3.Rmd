@@ -134,7 +134,7 @@ In the previous worksheet we were able to set up a working lexical decision expe
 
 In this section we will focus on adding in these parts.
 
-# running in full screen mode
+# Running in full screen mode
 
 For online experiments, it is sensible to ensure that the participant has as few distractions whilst completing the experiment. One useful approach is to make the experiment run in full screen mode.
 
@@ -240,7 +240,7 @@ Specifically https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06
 
 ![](https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png)
 
-We specify the source of the image, or where it is located using `src`, followed by a `=` then the link in quotations/`"`. If you want to use a file that you have uploaded to cognition.run, make sure you upload it to the stimuli section and then just specify the file name as the `src`, e.g. '<img src="ucjtk.png">'
+We specify the source of the image, or where it is located using `src`, followed by a `=` then the link in quotations/`"`. If you want to use a file that you have uploaded to cognition.run, make sure you upload it to the stimuli section and then just specify the file name as the `src`, e.g. <img src="image.png">
 
 ```{js}
 pages: ['<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png">']
