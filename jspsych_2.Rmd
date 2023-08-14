@@ -515,10 +515,10 @@ First lets make some example stimuli suitable for a lexical decision task:
 
 ```{js}
 var stimuli = [
-    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
-    {"item": "axaj", "real_word":"no", "correct_key":"h"},
-    {"item": "světe", "real_word":"yes", "correct_key":"d"},
-    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+    {"item": "hello", "real_word":"yes", "correct_key":"d"},
+    {"item": "hxllo", "real_word":"no", "correct_key":"h"},
+    {"item": "world", "real_word":"yes", "correct_key":"d"},
+    {"item": "wxrld", "real_word":"no", "correct_key":"h"}
 ];
 
 ```

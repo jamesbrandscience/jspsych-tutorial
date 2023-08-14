@@ -471,7 +471,7 @@ knitr::include_url("code_examples/Untitled1.html")
 
 This is how it should look in cognition.run:
 
-![](images/demo_experiment.gif)
+![](images/demo1.gif)
 
 
 
