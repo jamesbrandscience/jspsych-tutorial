@@ -4,6 +4,7 @@
   <script src="../dist/jspsych.js"></script>
   <script src="../dist/plugin-initialize-camera.js"></script>
   <script src="../dist/plugin-html-video-response.js"></script>
+  <script src="../dist/plugin-html-button-response.js"></script>
   <link rel="stylesheet" href="../dist/jspsych.css">
 </head>
 <body></body>
@@ -17,17 +18,25 @@
     include_audio: true
   }
 
+  var instructions = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: '<p>You will see a face appear on the screen.</p>'+
+      '<p>When you see the face try to copy what the face looks like. Your webcam will be recording you.</p>',
+    choices: ['Ready to start']
+  };
+
   const record = {
     type: jsPsychHtmlVideoResponse,
     stimulus: `<div style="width:100vw; height:100vh; position: relative;">
-      <div style="width:20px; height:20px; border-radius: 20px; background-color:red; position: absolute; top:10%; left:10%; transform: translate(-50%, -50%);"></div>
-      </div>`,
+    <h2>Recreate this face<h2>
+    <img src="IMG_1453.png" width="500">
+    </div>`,
     show_done_button: false,
-    recording_duration: 2000,
+    recording_duration: 5000,
     allow_playback: true
   }
 
-  jsPsych.run([init_camera, record]);
+  jsPsych.run([init_camera, instructions, record]);
 
 </script>
 </html>
