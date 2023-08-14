@@ -103,18 +103,18 @@ The worksheet will go through the following sections:
     - using consent forms
     - demographic questions and feedback
 <br/><br/>
-- Working with results files in R
-
-    - loading in multiple files quickly
-    - getting information from different parts of the experiment
-    - converting json formatted data to columns
-<br/><br/>
 - Running other types of experiments
 
     - working with audio, images and video
     - self paced reading
     - rating experiments
     - conidtional and if trials
+<br/><br/>
+- Working with results files in R
+
+    - loading in multiple files quickly
+    - getting information from different parts of the experiment
+    - converting json formatted data to columns
 
 ## `r fa("lightbulb")` Recap
 
@@ -236,14 +236,14 @@ If you want to make the instructions page look a bit more fancy, we can use html
 
 In the example below, we use an `img` html tag, to show an image from a link available on the internet.
 
-Specifically https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg
+Specifically https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png
 
-![](https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg)
+![](https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png)
 
 We specify the source of the image, or where it is located using `src`, followed by a `=` then the link in quotations/`"`. If you want to use a file that you have uploaded to cognition.run, make sure you upload it to the stimuli section and then just specify the file name as the `src`, e.g. '<img src="ucjtk.png">'
 
 ```{js}
-pages: ['<img src="https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg">']
+pages: ['<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png">']
 
 ```
 
@@ -252,7 +252,7 @@ You might notice that the image is not particularly a useful size. This is becau
 We can do this with `width` and `height` arguments, in the example below we specify the width as 400 and the height as 140, this is in pixels. You can just specify the width if you want to keep the aspect ratio the same as the original:
 
 ```{js}
-pages: ['<img src="https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg" width="400" height="140">']
+pages: ['<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140">']
 
 ```
 
@@ -283,7 +283,7 @@ Some quick html and css:
 `<b>` is a bold font tag, it makes the text bold
 
 ```{js}
-pages: ['<img src="https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>']
+pages: ['<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>']
 
 ```
 
@@ -483,7 +483,7 @@ var enter_fullscreen = {
 var instructions_page = {
     type: jsPsychInstructions,
     pages: [
-    '<img src="https://sites.ff.cuni.cz/ucjtk/wp-content/uploads/sites/57/2020/11/Ustav_ceske%E2%95%A0%C3%BCho_jazyka_a_teorie_komunikace.svg" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>',
+    '<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>',
     'In this experiment you will...'
     ],
     show_clickable_nav: true,

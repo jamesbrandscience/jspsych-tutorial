@@ -1,101 +1,101 @@
 var stimuli = [
   {
-    "item": "liška",
+    "item": "fox",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "sýr",
+    "item": "cheese",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "ovce",
+    "item": "sheep",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "banán",
+    "item": "banana",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "židle",
+    "item": "chair",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "hrášek",
+    "item": "pea",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "srdce",
+    "item": "heart",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "dýně",
+    "item": "pumpkin",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "okurka",
+    "item": "cucumber",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "hroch",
+    "item": "hippo",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "lišxa",
+    "item": "fzx",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "xýr",
+    "item": "cheesx",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "ovxe",
+    "item": "shxxp",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "bxnán",
+    "item": "banxna",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "židlx",
+    "item": "chxir",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "hxášek",
+    "item": "pxa",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "srdcx",
+    "item": "hexrt",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "xýně",
+    "item": "pumpkxn",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "okurkx",
+    "item": "cxcumber",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "hrxch",
+    "item": "hxppo",
     "real_word": "no",
     "correct_key": "h"
   }

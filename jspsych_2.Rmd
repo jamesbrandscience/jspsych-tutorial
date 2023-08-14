@@ -107,13 +107,13 @@ The worksheet will go through the following sections:
 
     - how to use them
     - adding variables to your results data
-    - formatting files from csv to javascript/json in R
+    - 
 <br/><br/>
-- Completing your experiment
+- Working with stimuli files
 
-    - adding instruction and consent pages
-    - collecting demographic information
-    - adding random participant IDs
+    - starting with csv files
+    - using R to convert to JSON
+    - uploading to cognition.run
 
 <!-- ## `r fa("arrow-right")` Up next -->
 
@@ -566,7 +566,7 @@ Now we have a randomised version of our lexical decision experiment, using the s
 
 This is what it should look like:
 
-![](images/lexical_decision1.gif)
+![](images/lexical_decision.gif)
 
 
 # Understanding the results
@@ -665,7 +665,7 @@ var fixation_trial = {
 
 Now if we complete the experiment and look at the data, we should see (note: I have removed some columns for ease of reading the screenshot, the new variables stored in the data will be at the right of the csv after `platform_version`):
 
-![](images/lexical_decision_data_csv2.png)
+![](images/lexical_decision_data_csv_1.png)
 
 The full code should be:
 
@@ -677,57 +677,42 @@ The full code should be:
 // author: [your name]
 //----------
 
-// inititate jspsych
 var jsPsych = initJsPsych();
 
-// create a var containing the stimuli in JSON format
 var stimuli = [
-    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
-    {"item": "axaj", "real_word":"no", "correct_key":"h"},
-    {"item": "světe", "real_word":"yes", "correct_key":"d"},
-    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+    {"item": "hello", "real_word":"yes", "correct_key":"d"},
+    {"item": "hxllo", "real_word":"no", "correct_key":"h"},
+    {"item": "world", "real_word":"yes", "correct_key":"d"},
+    {"item": "wxrld", "real_word":"no", "correct_key":"h"}
 ];
 
-// make a fixation trial
 var fixation_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div style="font-size:30pt;">+</div>',
   choices: 'NO_KEYS',
   prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
-  trial_duration: 2000
+  trial_duration: 2000,
   data: {
     task: 'fixation'
   }
 };
 
-// make a lexical decision trial
 var lexical_decision_trial = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: jsPsych.timelineVariable("item"),
   choices: ['d', 'h'],
-  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
-  data: {
-    task: 'lexical_decision',
-    real_word: jsPsych.timelineVariable('real_word'),
-    correct_key: jsPsych.timelineVariable('correct_key')
-    }
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>'
 };
 
-// make a variable which combines the fixation and lexical decision together
-// use stimuli as timeline_variables and randomise the presentation order
 var lexical_decision_combined = {
   timeline: [fixation_trial, lexical_decision_trial],
   timeline_variables: stimuli,
   randomize_order: true
 };
 
-// set up main timeline
 var timeline = [];
-
-// push the lexical_decision_combined variable to the timeline
 timeline.push(lexical_decision_combined);
 
-//run the experiment
 jsPsych.run(timeline);
 
 ```
@@ -790,7 +775,7 @@ install.packages("tidyverse")
 
 Once you have them installed, you should now load them in to R:
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 library(jsonlite)
 library(tidyverse)
 
@@ -798,11 +783,17 @@ library(tidyverse)
 
 ### 4. load in to R
 
-Now store the file as an object called `lexical_decision_stimuli`, you will have to use the full file path, e.g. "downloads/lexical_decision_stimuli.csv" or you can set the working directory to where the file is saved.
+We will need to load in the csv file in to R as an object. To do this, we need to tell R where the file is - the `working directory` or folder containing the file.
 
-```{r eval=TRUE, echo=TRUE}
+If you are not familiar with R, you can set the working directory by clicking on the options in this screenshot, then choose the folder where your csv file is saved:
+
+![](images/working_directory.png)
+
+Now store the file as an object called `lexical_decision_stimuli`.
+
+```{r eval=FALSE, echo=TRUE}
 lexical_decision_stimuli <- read_csv("lexical_decision_stimuli.csv")
-  
+
 ```
 
 ### 5. convert to JSON
@@ -815,7 +806,7 @@ The `toJSON` function takes as the first argument your data, so in this case `le
 
 We use the additional argument `pretty=TRUE` to make the output look pretty and easy to read.
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 lexical_decision_stimuli_JSON <- toJSON(lexical_decision_stimuli, pretty=TRUE)
 
 lexical_decision_stimuli_JSON
@@ -830,7 +821,7 @@ You will see there is no `var` assignment in the `lexical_decision_stimuli_JSON`
 
 But we can add this information quite easily using the `paste0` function:
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 lexical_decision_stimuli_JSON <- paste0("var stimuli = ", lexical_decision_stimuli_JSON, ";")
 
 lexical_decision_stimuli_JSON
@@ -843,18 +834,35 @@ We should now see that the start of the text has `var stimuli = `, followed by t
 
 Now we have the data formatted correctly, we can save the file using the `write_file` function, note that you should specify the exact file path of where you want the `file` to be saved:
 
-```{r eval=TRUE, echo=TRUE}
+```{r eval=FALSE, echo=TRUE}
 write_file(x = lexical_decision_stimuli_JSON, file = "lexical_decision_stimuli_JSON.js")
 
 ```
 
-You should now see the file in your folder, importantly this is a `js` or javascript file.
+You should now see the file in your working directory, importantly this is a `js` or javascript file.
 
 You can download this file [here](lexical_decision_stimuli_JSON.js), in case you had problems with running the R code.
 
 It should look like this:
 
 ![](images/lexical_decision_stimuli_JSON.png)
+
+Here is the full R code in a slightly more efficient way:
+
+```{r eval=FALSE, echo=TRUE}
+install.packages("jsonlite")
+install.packages("tidyverse")
+
+library(jsonlite)
+library(tidyverse)
+
+paste0("var stimuli = ",
+       toJSON(read_csv("lexical_decision_stimuli.csv"),
+              pretty=TRUE),
+       ";") %>%
+  write_file(file = "lexical_decision_stimuli_JSON.js")
+
+```
 
 ### 8. upload that file to cognition.run
 
@@ -872,10 +880,10 @@ Notice that we probably still have the following code in our script:
 
 ```{js}
 var stimuli = [
-    {"item": "ahoj", "real_word":"yes", "correct_key":"d"},
-    {"item": "axaj", "real_word":"no", "correct_key":"h"},
-    {"item": "světe", "real_word":"yes", "correct_key":"d"},
-    {"item": "xvěte", "real_word":"no", "correct_key":"h"}
+    {"item": "hello", "real_word":"yes", "correct_key":"d"},
+    {"item": "hxllo", "real_word":"no", "correct_key":"h"},
+    {"item": "world", "real_word":"yes", "correct_key":"d"},
+    {"item": "wxrld", "real_word":"no", "correct_key":"h"}
 ];
 
 ```
