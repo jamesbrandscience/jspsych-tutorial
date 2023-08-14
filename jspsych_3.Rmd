@@ -96,25 +96,25 @@ You do not need to:
 
 The worksheet will go through the following sections:
 
-- Making a complete experiment
+- Running in full screen mode
+- Presenting instructions
+- Using consent forms
+- Demographic questions
+- Feedback forms
+- Distributing links
 
-    - running in full screen mode
-    - presenting instructions
-    - using consent forms
-    - demographic questions and feedback
-<br/><br/>
-- Running other types of experiments
+<!-- - Running other types of experiments -->
 
-    - working with audio, images and video
-    - self paced reading
-    - rating experiments
-    - conidtional and if trials
-<br/><br/>
-- Working with results files in R
+<!--     - working with audio, images and video -->
+<!--     - self paced reading -->
+<!--     - rating experiments -->
+<!--     - conidtional and if trials -->
+<!-- <br/><br/> -->
+<!-- - Working with results files in R -->
 
-    - loading in multiple files quickly
-    - getting information from different parts of the experiment
-    - converting json formatted data to columns
+<!--     - loading in multiple files quickly -->
+<!--     - getting information from different parts of the experiment -->
+<!--     - converting json formatted data to columns -->
 
 ## `r fa("lightbulb")` Recap
 
@@ -134,7 +134,7 @@ In the previous worksheet we were able to set up a working lexical decision expe
 
 In this section we will focus on adding in these parts.
 
-## running in full screen mode
+# running in full screen mode
 
 For online experiments, it is sensible to ensure that the participant has as few distractions whilst completing the experiment. One useful approach is to make the experiment run in full screen mode.
 
@@ -173,7 +173,7 @@ timeline.push(enter_fullscreen);
 
 ```
 
-## presenting instructions
+# Instructions page
 
 To make sure that the participants understand what the basic outline of the experiment is, we need to present the participants with a general instruction page.
 
@@ -222,7 +222,7 @@ The strings can be written simply without any formatting, or you can use html an
 
 `button_label_next` - this is the text in the button to go to the next instructions page or finish the instructions. It is a string, but can also take html and css
 
-`button_label_next` - this is the text in the button to go to the previous instructions page. It is a string, but can also take html and css
+`button_label_previous` - this is the text in the button to go to the previous instructions page. It is a string, but can also take html and css
 
 
 Don't forget, if we want to show the trial to the participant, we will have to `push` it to our timeline.
@@ -283,11 +283,23 @@ Some quick html and css:
 `<b>` is a bold font tag, it makes the text bold
 
 ```{js}
-pages: ['<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>']
+var instructions_page = {
+    type: jsPsychInstructions,
+    pages: [
+    '<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "d" key, if you do not think it is a real word, press the "h" key.</b></p><p>Press next to continue.</div>',
+    'In this experiment you will...'
+    ],
+    show_clickable_nav: true,
+    key_forward: 'Enter',
+    key_backward: 'ArrowLeft,
+    allow_backward: true,
+    button_label_next: 'next',
+    button_label_previous: 'back'
+};
 
 ```
 
-## using consent forms
+# Consent forms
 
 If you are running an online experiment, you will likely be collecting data from participants that they need to consent to if they are to participate.
 
@@ -310,7 +322,7 @@ var consent_page = {
 
 ```
 
-## demographic questions and feedback
+# Demographic questions
 
 Another important part of an experiment is the collection of demographic information, such as age, gender, email address etc.
 
@@ -366,9 +378,12 @@ Here we use `text-align: left;` to make sure all the text is left aligned
 
 In the above code we have 5 questions written in the `html` section:
 
-## Question 1 - text input:
+## Question 1 - text input
 
-`'<p>Question 1 </p><input id="Q1" name="Q1" type="text" />'`
+```{r}
+'<p>Question 1 </p><input id="Q1" name="Q1" type="text" />'
+
+```
 
 Here we start with a `<p>` tag, where we put the question text, i.e. Question 1
 
@@ -380,19 +395,25 @@ We also give it a `name`, again this should be unique for the specific question,
 
 Finally we specify the `type` of input, here we use `"text"`, which will give us a text input field, the input provided by the participant will be stored in the data
 
-## Question 2 - number input:
+## Question 2 - number input
 
-`'<p>Question 2 </p><input id="Q2" name="Q2" type="number" />'`
+```{js}
+'<p>Question 2 </p><input id="Q2" name="Q2" type="number" />'
+
+```
 
 This question is similar to Question 1, but we have changed the type to `"number"` so only numeric values are allowed
 
 ## Question 3 - email input:
 
-`'<p>Question 3 </p><input id="Q3" name="Q3" type="email" />'`
+```{js}
+'<p>Question 3 </p><input id="Q3" name="Q3" type="email" />'
+
+```
 
 This question is similar to Question 1, but we have changed the type to `"email"` so only values containing an `@` are allowed
 
-## Question 4 - radio button input:
+## Question 4 - radio button input
 
 ```{js}
 '<p>Question 4</p>'+
@@ -408,7 +429,7 @@ As well as the `id` and `name` options, we also include a `value`. The value is 
 
 There is a `<label>` tag, this is important as it will provide the text that the participant sees next to the radio button. So `<label>a</label>` is the part of the code that is seen, but the `value` is what is stored in the data.
 
-## Question 5 - checkbox input:
+## Question 5 - checkbox input
 
 ```{js}
 '<p>Question 5</p>'+
@@ -422,11 +443,11 @@ This is similar to Question 4, but instead of radio buttons we have `checkbox` a
 
 Now the participant can choose multiple options.
 
-## Question 6 - textarea:
+## Question 6 - textarea
 
 ```{js}
 '<p>Question 6</p>'+
-  `<textarea id="feedback_comments" name="feedback_comments" rows="4" cols="50"/></textarea>`+
+  `<textarea id="Q6" name="Q6" rows="4" cols="50"/></textarea>`+
   
 ```
 
@@ -444,11 +465,39 @@ This is placed within the `<input>` tag.
 
 So for Question 1 we would use:
 
-`'<p>Question 1 </p><input id="Q1" name="Q1" type="text" required/>'`
+```{js}
+'<p>Question 1 </p><input id="Q1" name="Q1" type="text" required/>'
+
+```
 
 This now means the question will give a warning when the participant tries to click on next, saying that they have to provide a response.
 
-# Putting the whole experiment together
+# Feedback form
+
+After the main experiment has finished, we need to let the participant know that they have completed the experiment.
+
+To do this, we can make a feedback form, that will present a message to the participant and ask some basic questions.
+
+To do this we will use the `survey-html-form` plugin, like we did for the demographic information.
+
+```{js}
+var feedback_page = {
+  type: jsPsychSurveyHtmlForm,
+  html: '<div style="text-align: left;">'+
+  '<p>That is the end of the experiment.</p>'+
+  '<p>How easy did you find the experiment? </p>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="difficult"><label>difficult</label><br>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="easy"><label>easy</label><br>'+
+  '<p>If you have any feedback about the experiment, please write your comments below.</p>'+
+  `<textarea id="feedback_comments" name="feedback_comments" rows="4" cols="50"/></textarea>`+
+  '</br></div>',
+  button_label: 'Submit results',
+  autofocus: 'feedback_ease'
+};
+
+```
+
+# The whole experiment
 
 Now we have the following components:
 
@@ -456,6 +505,7 @@ Now we have the following components:
 - instructions page
 - consent page
 - demographic form
+- feedback form
 
 If we combine this with the lexical decision experiment we made in the previous section, we would have something like this:
 
@@ -483,7 +533,7 @@ var enter_fullscreen = {
 var instructions_page = {
     type: jsPsychInstructions,
     pages: [
-    '<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "e" key, if you do not think it is a real word, press the "i" key.</b></p><p>Press next to continue.</div>',
+    '<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "d" key, if you do not think it is a real word, press the "h" key.</b></p><p>Press next to continue.</div>',
     'In this experiment you will...'
     ],
     show_clickable_nav: true,
@@ -491,7 +541,7 @@ var instructions_page = {
     key_backward: 'ArrowLeft',
     allow_backward: true,
     show_clickable_nav: true,
-    button_label_previous: '<b>next</b>',
+    button_label_previous: 'back',
     button_label_next: 'next'
 };
 
@@ -508,7 +558,7 @@ var consent_page = {
   var demographics_page = {
   type: jsPsychSurveyHtmlForm,
   html: '<div style="text-align: left;">'+
-  '<p>Question 1 </p><input id="Q1" name="Q1" type="text" />'+
+  '<p>Question 1 </p><input id="Q1" name="Q1" type="text" required/>'+
   '<p>Question 2 </p><input id="Q2" name="Q2" type="number" />'+
   '<p>Question 3 </p><input id="Q3" name="Q3" type="email" />'+
   '<p>Question 4</p>'+
@@ -555,18 +605,35 @@ var lexical_decision_combined = {
   randomize_order: true
 };
 
+var feedback_page = {
+  type: jsPsychSurveyHtmlForm,
+  html: '<div style="text-align: left;">'+
+  '<p>That is the end of the experiment.</p>'+
+  '<p>How easy did you find the experiment? </p>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="difficult"><label>difficult</label><br>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="easy"><label>easy</label><br>'+
+  '<p>If you have any feedback about the experiment, please write your comments below.</p>'+
+  `<textarea id="feedback_comments" name="feedback_comments" rows="4" cols="50"/></textarea>`+
+  '</br></div>',
+  button_label: 'Submit results',
+  autofocus: 'feedback_ease'
+};
+
 timeline.push(enter_fullscreen);
 timeline.push(instructions_page);
 timeline.push(consent_page);
 timeline.push(demographics_page);
 
-// push the lexical_decision_combined variable to the timeline
 timeline.push(lexical_decision_combined);
+
+timeline.push(feedback_page);
 
 //run the experiment
 jsPsych.run(timeline);
 
 ```
+
+# Distributing links
 
 We can now go back to the experiment dashboard in cognition.run by clicking on the `demo` button. This might look different if you named your experiment something else.
 
@@ -586,26 +653,29 @@ Once the participant has completed the experiment you will see their data appear
 
 You can download the data from cognition.run and then analyse it.
 
-# Working with results files in R
-
-## loading in multiple files quickly
-
-## getting information from different parts of the experiment
-
-## converting json formatted data to columns
 
 
 
+<!-- # Working with results files in R -->
 
-# Running other types of experiments
+<!-- ## loading in multiple files quickly -->
 
-## working with audio, images and video
+<!-- ## getting information from different parts of the experiment -->
 
-## self paced reading
+<!-- ## converting json formatted data to columns -->
 
-## rating experiments
 
-## conidtional and if trials
+
+
+<!-- # Running other types of experiments -->
+
+<!-- ## working with audio, images and video -->
+
+<!-- ## self paced reading -->
+
+<!-- ## rating experiments -->
+
+<!-- ## conidtional and if trials -->
 
 
 
