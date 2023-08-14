@@ -219,7 +219,7 @@ message(x = paste("<b>Versions of jsPsych</b>",
 
 ---
 
-# 1. Running experiments
+# Running experiments
 
 In order to run your experiments, you have write code that will tell jsPsych what you want it to do. This requires you to speak the same way as jsPsych, so that your instructions can be interpreted properly.
 
