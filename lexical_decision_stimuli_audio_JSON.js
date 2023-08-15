@@ -1,101 +1,101 @@
 var stimuli = [
   {
-    "item": "untitled.wav",
+    "item": "fox.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "cheese.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "sheep.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "banana.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "chair.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "pea.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "heart.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "pumpkin.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "cucumber.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "hippo.wav",
     "real_word": "yes",
     "correct_key": "d"
   },
   {
-    "item": "untitled.wav",
+    "item": "fzx.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "cheesx.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "shxxp.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "banxna.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "chxir.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "pxa.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "hexrt.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "pumpkxn.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "cxcumber.wav",
     "real_word": "no",
     "correct_key": "h"
   },
   {
-    "item": "untitled.wav",
+    "item": "hxppo.wav",
     "real_word": "no",
     "correct_key": "h"
   }
