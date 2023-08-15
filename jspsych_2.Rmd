@@ -769,7 +769,9 @@ You can do this in Microsoft Excel by following this recording:
 
 ![](images/lexical_decision_stimuli_excel.gif)
 
-Alternatively, you can download the file [here](lexical_decision_stimuli.csv).
+Alternatively, you can download the file:
+
+`r fa("download")`[lexical_decision_stimuli.csv](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli.csv).
 
 ### 3. load in packages
 
@@ -804,7 +806,7 @@ If you are not familiar with R, you can set the working directory by clicking on
 Now store the file as an object called `lexical_decision_stimuli`.
 
 ```{r eval=FALSE, echo=TRUE}
-lexical_decision_stimuli <- read_csv("lexical_decision_stimuli.csv")
+lexical_decision_stimuli <- read_delim("lexical_decision_stimuli.csv", delim = ";")
 
 ```
 
@@ -853,7 +855,9 @@ write_file(x = lexical_decision_stimuli_JSON, file = "lexical_decision_stimuli_J
 
 You should now see the file in your working directory, importantly this is a `js` or javascript file.
 
-You can download this file [here](lexical_decision_stimuli_JSON.js), in case you had problems with running the R code.
+You can download this file
+
+`r fa("download")` [here](lexical_decision_stimuli_JSON.js), in case you had problems with running the R code.
 
 It should look like this:
 
@@ -869,7 +873,7 @@ library(jsonlite)
 library(tidyverse)
 
 paste0("var stimuli = ",
-       toJSON(read_csv("lexical_decision_stimuli.csv"),
+       toJSON(read_delim("lexical_decision_stimuli.csv", delim = ";"),
               pretty=TRUE),
        ";") %>%
   write_file(file = "lexical_decision_stimuli_JSON.js")

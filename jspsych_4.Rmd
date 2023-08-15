@@ -147,7 +147,7 @@ We will use a set of audio files that have the same words and non-words as we us
 
 You can download the audio files as a .zip folder at this link.
 
-**link**
+`r fa("download")` [jspsych_audio_stimuli.zip](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/jspsych_audio_stimuli.zip)
 
 There should be 20 files, each named something like `fox.wav`.
 
@@ -189,7 +189,9 @@ paste0("var stimuli = ",
 
 We should now have a file called `lexical_decision_stimuli_audio_JSON.js`, which we can upload to cognition.run in the `external JS/CSS` section.
 
-If you need this file, you can download it [here](lexical_decision_stimuli_audio_JSON.js).
+If you need this file, you can download it:
+
+`r fa("download")` [lexical_decision_stimuli_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_JSON.js).
 
 ## audio-keyboard-response
 
@@ -215,6 +217,59 @@ var lexical_decision_trial = {
 But in order for our audio files to be read properly, we need to change the plugin type.
 
 If we change the `type` argument from `jsPsychHtmlKeyboardResponse` to `jsPsychAudioKeyboardResponse`, we should now see that the experiment will play the audio files and not present the words.
+
+So the final code for a simple auditory lexical decision experiment would be:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+// inititate jspsych
+var jsPsych = initJsPsych();
+
+// set up main timeline
+var timeline = [];
+
+var lexical_decision_trial = {
+  type: jsPsychAudioKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:12pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  data: {
+    task: 'lexical_decision',
+    real_word: jsPsych.timelineVariable('real_word'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+    }
+};
+
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 500,
+  data: {
+    task: 'fixation'
+  }
+};
+
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+timeline.push(lexical_decision_combined);
+
+//run the experiment
+jsPsych.run(timeline);
+
+```
+
 
 # image stimuli
 
