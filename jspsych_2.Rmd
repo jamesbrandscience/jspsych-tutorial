@@ -750,18 +750,30 @@ There should be 20 rows: 10 of which are real words and the other 10 are non-wor
 
 The data should look like this:
 
-![](images/stimuli_csv.png)
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+datatable(data.frame(item = c("fox", "cheese", "sheep", "banana", "chair", "pea", "heart", "pumpkin", "cucumber", "hippo", "fzx", "cheesx", "shxxp", "banxna", "chxir", "pxa", "hexrt", "pumpkxn", "cxcumber", "hxppo"),
+                 real_word = c(rep("yes", 10), rep("no", 10)),
+                 correct_key = c(rep("d", 10), rep("h", 10))), rownames = FALSE, filter = "none", autoHideNavigation = TRUE, options = list(dom = 't', pageLength = 20))
+
+```
+
+<!-- ![](images/stimuli_csv.png) -->
 
 ### 2. export to csv
 
 If you are working with your own file, export it as a .csv file, preferably with utf-8 encoding.
 
-Alternatively, you can download the file
-[here](lexical_decision_stimuli.csv), it should be saved as `lexical_decision_stimuli.csv`
+The filename should be `lexical_decision_stimuli.csv`
+
+You can do this in Microsoft Excel by following this recording:
+
+![](images/lexical_decision_stimuli_excel.gif)
+
+Alternatively, you can download the file [here](lexical_decision_stimuli.csv).
 
 ### 3. load in packages
 
-Open up RStudio or R on your computer and open a new R script.
+Open up RStudio on your computer and open a new R script.
 
 You will need the `jsonlite` the `tidyverse` packages installed and loaded in to R.
 
