@@ -9,7 +9,7 @@
 <script>
 
   var jsPsych = initJsPsych({
-    default_ITI: 250, 
+    default_ITI: 250,
     on_finish: function() {
       jsPsych.data.displayData();
     }
@@ -17,7 +17,12 @@
 
   var trial_1 = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<p style="color: red; font-size: 48px; font-weight: bold;">GREEN</p>',
+    stimulus: function() {
+
+      var progress_bar = jsPsych.timelineVariable('stim')+jsPsych.timelineVariable('stim');
+
+      return progress_bar;
+  },
     choices: ['y', 'n'],
     prompt: '<p>Does the color match the word? (y or n)</p>'
   };

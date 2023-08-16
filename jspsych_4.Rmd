@@ -99,9 +99,10 @@ The worksheet will go through the following sections:
 
 - Running other types of experiments
 
-    - working with audio, images and video
-    - self paced reading
-    - conditional and if trials
+    - working with audio
+    - working with images
+    - working with images and audio
+    <!-- - conditional and if trials -->
 <br/><br/>
 - Working with results files in R
 
@@ -137,7 +138,7 @@ In the last session we should have:
 
 In this section, we will focus on different types of experiments that are more advanced than the lexical decision experiment we have already programmed.
 
-# audio stimuli
+# Audio stimuli
 
 A common adaption to the lexical decision experiment is the auditory version, where instead of text on the screen the participant hears an audio recording. To run this type of experiment we will need to use audio files.
 
@@ -163,7 +164,7 @@ To do this, we need to create a new version of our `lexical_decision_stimuli.csv
 
 Change each of the words in the `item` column so that there is `.wav` at the end, e.g. `fox` should be `fox.wav`.
 
-Save the file as a .csv, called `lexical_decision_stimuli.csv`.
+Save the file as a .csv, called `lexical_decision_stimuli_audio.csv`.
 
 The data should look like this:
 
@@ -271,11 +272,134 @@ jsPsych.run(timeline);
 ```
 
 
-# image stimuli
+# Image stimuli
 
-# video stimuli
+Another common design is to present an image to the participant and ask them to respond with a key press. We can present images in the same way as we presented text and audio, i.e. keeping the same code as before, but making some small changes and using different stimuli.
 
-# conditional and if trials
+In this experiment, we will present an image on the screen and ask participants to press a button if they would eat the thing represented by the image, an eating decision experiment.
+
+## image files
+
+We will use a set of image files that have the same referents as we used in the text version, when they were real words.
+
+You can download the audio files as a .zip folder at this link.
+
+`r fa("download")` [jspsych_image_stimuli.zip](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/jspsych_image_stimuli.zip)
+
+There should be 10 files, each named something like `fox.png`. These files are from the Multipic database https://www.bcbl.eu/databases/multipic/
+
+In cognition.run we can now upload these files so that they are stored in the experiment. Click the `browse` button and choose the image files that were in the .zip folder. You can select all the files and upload them in one go.
+
+## stimuli file
+
+Now we need to update the stimuli file, so that we are reading in the image `.png` files, instead of the text.
+
+To do this, we need to create a new version of our `lexical_decision_stimuli.csv` file.
+
+Change each of the words in the `item` column so that there is `.png` at the end, e.g. `fox` should be `fox.png` and change the `real_word` column to `eat`, representing whether you would eat the thing, then update the `correct_key` column - d = eat, h = do not eat.
+
+Save the file as a .csv, called `lexical_decision_stimuli_image.csv`.
+
+The data should look like this:
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+datatable(data.frame(item = c("fox.png", "cheese.png", "sheep.png", "banana.png", "chair.png", "pea.png", "heart.png", "pumpkin.png", "cucumber.png", "hippo.png"),
+                 eat = c("no", "yes", "no", "yes", "no", "yes", "no", "yes", "yes", "no"),
+                 correct_key = c("h", "d", "h", "d", "h", "d", "h", "d", "d", "h")), rownames = FALSE, filter = "none", autoHideNavigation = TRUE, options = list(dom = 't', pageLength = 10))
+
+```
+
+Now we need to go to R and process the .csv file to json format.
+
+We can use the same code to go from csv to json to js as we did in session 2:
+
+```{r eval=FALSE, echo=TRUE}
+paste0("var stimuli = ",
+       toJSON(read_delim("lexical_decision_stimuli_image.csv", delim = ";"),
+              pretty=TRUE),
+       ";") %>%
+  write_file(file = "lexical_decision_stimuli_image_JSON.js")
+
+```
+
+We should now have a file called `lexical_decision_stimuli_audio_JSON.js`, which we can upload to cognition.run in the `external JS/CSS` section.
+
+If you need this file, you can download it:
+
+`r fa("download")` [lexical_decision_stimuli_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_JSON.js).
+
+## image-keyboard-response
+
+The last thing we need to change in our jspsych code is the plugin type.
+
+If we change the `type` argument from `jsPsychHtmlKeyboardResponse` to `jsPsychImageKeyboardResponse`, we should now see that the experiment will show the image files and not present the words.
+
+
+
+
+
+
+
+So the final code for a simple auditory lexical decision experiment would be:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+// inititate jspsych
+var jsPsych = initJsPsych();
+
+// set up main timeline
+var timeline = [];
+
+var lexical_decision_trial = {
+  type: jsPsychAudioKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("item"),
+  choices: ['d', 'h'],
+  prompt: '<div style="font-size:12pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  data: {
+    task: 'lexical_decision',
+    real_word: jsPsych.timelineVariable('real_word'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+    }
+};
+
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 500,
+  data: {
+    task: 'fixation'
+  }
+};
+
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+timeline.push(lexical_decision_combined);
+
+//run the experiment
+jsPsych.run(timeline);
+
+```
+
+# Audio and image stimuli
+
+# Working with results in R
+
+
+
+
+<!-- # Conditional and if trials -->
 
 
 
