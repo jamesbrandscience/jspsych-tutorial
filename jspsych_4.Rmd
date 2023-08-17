@@ -192,7 +192,7 @@ We should now have a file called `lexical_decision_stimuli_audio_JSON.js`, which
 
 If you need this file, you can download it:
 
-`r fa("download")` [lexical_decision_stimuli_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_JSON.js).
+`r fa("download")` [lexical_decision_stimuli_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_audio_JSON.js).
 
 ## audio-keyboard-response
 
@@ -322,11 +322,11 @@ paste0("var stimuli = ",
 
 ```
 
-We should now have a file called `lexical_decision_stimuli_audio_JSON.js`, which we can upload to cognition.run in the `external JS/CSS` section.
+We should now have a file called `lexical_decision_stimuli_image_JSON.js`, which we can upload to cognition.run in the `external JS/CSS` section.
 
 If you need this file, you can download it:
 
-`r fa("download")` [lexical_decision_stimuli_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_JSON.js).
+`r fa("download")` [lexical_decision_stimuli_image_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_image_JSON.js).
 
 ## image-keyboard-response
 
