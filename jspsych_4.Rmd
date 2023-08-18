@@ -388,6 +388,89 @@ jsPsych.run(timeline);
 
 # Audio and image stimuli
 
+You might want to design an experiment where you present an audio file and the participant has to make a decision based on which image to choose. This can be easily implemented.
+
+In this example, we will use both the audio and image files together in a trial using the `jsPsychAudioButtonResponse` plugin.
+
+## audio and image files
+
+We will present three images on the screen, one on the left, one in the center and one on the right of the screen. Together with the images, the participant will hear an audio file, containing a word or non-word. We will use the same image and audio files as in the previous sections.
+
+To make sure the files will be loaded in to jspsych, we should upload them all to cognition.run. You can do this following the same steps as before.
+
+![](images/audio_image_upload.png)
+
+## stimuli file
+
+Our stimuli file will look a little bit different this time. As we will have three images and an audio file, we will need our stimuli file to have this specific information included.
+
+We will make a csv file which has the following columns: `image_left`, `image_center`, `image_right`, `audio`, `real_word`, `correct_choice`.
+
+This is what the stimuli file should look like:
+
+```{r echo=FALSE, eval=TRUE, warning=FALSE}
+datatable(data.frame(image_left = c("fox.png", "cheese.png", "sheep.png", "banana.png", "chair.png", "pea.png", "heart.png", "pumpkin.png", "cucumber.png", "hippo.png"),
+                     image_center = c("hippo.png", "fox.png", "cheese.png", "sheep.png", "banana.png", "chair.png", "pea.png", "heart.png", "pumpkin.png", "cucumber.png"),
+                     image_right = c("cucumber.png", "hippo.png", "fox.png", "cheese.png", "sheep.png", "banana.png", "chair.png", "pea.png", "heart.png", "pumpkin.png"),
+                     audio = c("fox.wav", "cheesx.wav", "sheep.wav", "banxna.wav", "banana.wav", "chxir.wav", "pea.wav", "pxa.wav", "heart.wav", "pumpkxn.wav"),
+                     real_word = c("yes", "no", "yes", "no", "yes", "no", "yes", "no", "yes", "no"),
+                     correct_choice = c("0", "0", "0", "0", "1", "1", "1", "2", "2", "2")), rownames = FALSE, filter = "none", autoHideNavigation = TRUE, options = list(dom = 't', pageLength = 10))
+
+```
+Note that the `correct_choice` column has values of `0`, `1` and `2`. In jspsych these correspond to the order of the buttons used in the html-button-response plugin. When a participant chooses a button, the response will be stored as a value, so if there are 3 buttons, there will be either `0`, `1` or `2`. We will see how this works when we make our trial and look at the data.
+
+Once you have the data set up as a spreadsheet, or other file, export it to a .csv file called `lexical_decision_stimuli_image_audio.csv`.
+
+If you need this file, you can download it:
+
+`r fa("download")` [lexical_decision_stimuli_image_audio.csv](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_image_audio.csv).
+
+Then we can use R to process the csv file to a js file in json format.
+
+```{r eval=FALSE, echo=TRUE}
+paste0("var stimuli = ",
+       toJSON(read_delim("lexical_decision_stimuli_image_audio.csv", delim = ";"),
+              pretty=TRUE),
+       ";") %>%
+  write_file(file = "lexical_decision_stimuli_image_audio_JSON.js")
+
+```
+
+Once we have the file, we can upload it to cognition.run, like we did for the previous examples.
+
+If you need this file, you can download it:
+
+`r fa("download")` [lexical_decision_stimuli_image_audio_JSON.js](https://github.com/jamesbrandscience/jspsych-tutorial/raw/main/lexical_decision_stimuli_image_audio_JSON.js).
+
+## jsPsychAudioButtonResponse
+
+We will use a slightly different plugin for this type of trial. We can use a button response instead of a keyboard response so that participants can click on the picture they want to select, so we will use `jsPsychAudioButtonResponse`.
+
+Here is how our trial will look:
+
+```{js}
+var lexical_decision_trial = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: jsPsych.timelineVariable("audio"),
+    choices: [
+      jsPsych.timelineVariable("image_left"),
+      jsPsych.timelineVariable("image_center"),
+      jsPsych.timelineVariable("image_right")],
+    prompt: "<p>Click on the picture that matched the sound</p>",
+    button_html: '<img src="%choice%" width=100 />',
+    data: {
+      task: 'lexical_decision',
+      image_left: jsPsych.timelineVariable("image_left"),
+      image_center: jsPsych.timelineVariable("image_center"),
+      image_right: jsPsych.timelineVariable("image_right"), 
+      real_word: jsPsych.timelineVariable('real_word'),
+      correct_choice: jsPsych.timelineVariable('correct_choice')
+    }
+};
+
+```
+
+
 # Working with results in R
 
 
