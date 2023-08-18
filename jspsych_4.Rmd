@@ -455,7 +455,8 @@ var lexical_decision_trial = {
     choices: [
       jsPsych.timelineVariable("image_left"),
       jsPsych.timelineVariable("image_center"),
-      jsPsych.timelineVariable("image_right")],
+      jsPsych.timelineVariable("image_right")
+      ],
     prompt: "<p>Click on the picture that matched the sound</p>",
     button_html: '<img src="%choice%" width=100 />',
     data: {
@@ -470,14 +471,426 @@ var lexical_decision_trial = {
 
 ```
 
+In this trial there are some differences in the code that might need explaining.
 
-# Working with results in R
+```
+stimulus: jsPsych.timelineVariable("audio")
+```
+This is where we specify that we want to have the files from the audio column in our stimuli played
 
+```
+choices: [
+  jsPsych.timelineVariable("image_left"),
+  jsPsych.timelineVariable("image_center"),
+  jsPsych.timelineVariable("image_right")
+  ]
+```
+This is where we specify the buttons that will be displayed in our trial.
 
+The order that you specify these items is important. The first item, image_left, will be the first button and appear on the left. It will also have a value of `0` if a participant chooses it. If you only had this one item it will appear in the middle. The second item will have a value of `1` and should appear in the center, if there are three items. The thrid item will have a value of `2` and should appear to the left.
 
+Note that we are referring to timeline variables, but they are image files so we need to specify this in the `button_html` parameter, otherwise they will just show the text version of the filename.
 
-<!-- # Conditional and if trials -->
+```
+button_html: '<img src="%choice%" width=100 />'
+```
+This is where we specify that the choices should be displayed as images. We do this with the html `<img>` tag and then specify the `src=%choice%` which will be interpreted as reading the filenames from our timeline variables specified in the `choices` parameter.
 
+We also add a `width` argument, this is quite important as the images would be too big in their dimensions to fit together in one line if we used the default size.
+
+This is how the final code should look like:
+
+```{js}
+// --------
+// Title: lexical decision experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+var jsPsych = initJsPsych();
+
+var lexical_decision_trial = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: jsPsych.timelineVariable("audio"),
+    choices: [
+      jsPsych.timelineVariable("image_left"),
+      jsPsych.timelineVariable("image_center"),
+      jsPsych.timelineVariable("image_right")
+      ],
+    prompt: "<p>Click on the picture that matched the sound</p>",
+    button_html: '<img src="%choice%" width=100 />',
+    data: {
+      task: 'lexical_decision',
+      image_left: jsPsych.timelineVariable("image_left"),
+      image_center: jsPsych.timelineVariable("image_center"),
+      image_right: jsPsych.timelineVariable("image_right"), 
+      real_word: jsPsych.timelineVariable('real_word'),
+      correct_choice: jsPsych.timelineVariable('correct_choice')
+    }
+};
+
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000,
+  data: {
+      task: 'fixation'
+    }
+};
+
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+var timeline = [];
+
+timeline.push(lexical_decision_combined);
+
+jsPsych.run(timeline);
+
+```
+
+And this is how the experiment should look:
+
+![](images/image_audio_trial.gif)
+
+# Preloading
+
+You might have noticed that there is a small delay in the presentation of the images being shown. This is because jspsych will load the files each time they are shown. However, there is a way to preload them at the start of the experiment, so the files are stored in the browser memory and are displayed much more quickly and reliably.
+
+This is done using the `preload` plugin.
+
+To preload all the files in our experiment we first need to store all the image and audio file names to an array.
+
+First, we will create an empty array called `all_images`
+
+```{js}
+var all_images = [];
+
+```
+
+This will be used to store the filenames from our `stimuli` object, specifically all of the filenames from the three columns that contain images - `image_left`, `image_center` and `image_right`.
+
+This requires a bit of code...
+
+```{js}
+for (let i = 0; i < stimuli.length; i++) {
+  all_images.push(stimuli[i].image_left);
+  all_images.push(stimuli[i].image_center);
+  all_images.push(stimuli[i].image_right);
+};
+
+```
+
+The code above will get the length of our `stimuli` object, then it will go through each item in the `stimuli` object and `push` the values from the three columns. This process will stop once it has completed the last item.
+
+This means that `all_images` will not be filled with the image filenames from `stimuli`, so it will look something like `["fox.png", "cheese.png", "chair.png" ...]`.
+
+We will also repeat this process for the audio filenames.
+
+```{js}
+var all_audio = [];
+
+for (let i = 0; i < stimuli.length; i++) {
+  all_audio.push(stimuli[i].audio);
+};
+
+```
+
+Finally, we need to make a trial that uses the `preload` plugin, so that jspsych can actually preload all the files that are referred to in the `all_images` and `all_audio` arrays.
+
+```{js}
+var preload = {
+    type: jsPsychPreload,
+    images: [all_images],
+    audio: [all_audio]
+};
+
+```
+
+Note that there are two separate parameters `images` and `audio`. We use these two parameters to refer to the relevant array that contains the filepaths.
+
+Don't forget that we need to `push` the `preload` to our timeline for jspsych to know the files need to be preloaded.
+
+```{js}
+timeline.push(preload);
+
+```
+
+Now we should have a fully working experiment, that preloads our stimuli.
+
+Here is the code:
+
+```{js}
+// --------
+// Title: lexical decision experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+var jsPsych = initJsPsych();
+
+var lexical_decision_trial = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: jsPsych.timelineVariable("audio"),
+    choices: [
+      jsPsych.timelineVariable("image_left"),
+      jsPsych.timelineVariable("image_center"),
+      jsPsych.timelineVariable("image_right")
+      ],
+    prompt: "<p>Click on the picture that matched the sound</p>",
+    button_html: '<img src="%choice%" width=100 />',
+    data: {
+      task: 'lexical_decision',
+      image_left: jsPsych.timelineVariable("image_left"),
+      image_center: jsPsych.timelineVariable("image_center"),
+      image_right: jsPsych.timelineVariable("image_right"), 
+      real_word: jsPsych.timelineVariable('real_word'),
+      correct_choice: jsPsych.timelineVariable('correct_choice')
+    }
+};
+
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000,
+  data: {
+      task: 'fixation'
+    }
+};
+
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+var all_images = [];
+
+for (let i = 0; i < stimuli.length; i++) {
+  all_images.push(stimuli[i].image_left);
+  all_images.push(stimuli[i].image_center);
+  all_images.push(stimuli[i].image_right);
+};
+
+var all_audio = [];
+
+for (let i = 0; i < stimuli.length; i++) {
+  all_audio.push(stimuli[i].audio);
+};
+
+var preload = {
+    type: jsPsychPreload,
+    images: [all_images],
+    audio: [all_audio]
+};
+
+var timeline = [];
+
+timeline.push(preload);
+timeline.push(lexical_decision_combined);
+
+jsPsych.run(timeline);
+
+```
+
+# Running a full experiment
+
+Now we have the basis of an experiment. If we add in all of the extra parts, such as the instructions, demographics, etc. we could send the links out to participants and wait for the data.
+
+Here is the full code of an experiment with all the extra parts:
+
+```{js}
+// --------
+// Title: Demo experiment
+// jsPsych version: 7.3.1
+// date: [today]
+// author: [your name]
+//----------
+
+// inititate jspsych
+var jsPsych = initJsPsych();
+
+// full screen
+var enter_fullscreen = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: true,
+  message: '<p>some message</p>',
+  button_label: 'enter full screen mode',
+  data: {
+      task: 'fullscreen'
+    }
+};
+
+// a really simple instructions page with a logo
+var instructions_page = {
+    type: jsPsychInstructions,
+    pages: [
+    '<img src="https://sites2.ff.cuni.cz/ssol/wp-content/uploads/sites/103/2023/06/cropped-navrh_wider.png" width="400" height="140"></br><hr><div style="text-align: left; margin-right: 150px; margin-left: 150px;"><h2>Instructions</h2><p>In this experiment you will see a word on the screen.</p><p><b>If you think the word is a real word press the "d" key, if you do not think it is a real word, press the "h" key.</b></p><p>Press next to continue.</div>',
+    'In this experiment you will...'
+    ],
+    show_clickable_nav: true,
+    key_forward: 'Enter',
+    key_backward: 'ArrowLeft',
+    allow_backward: true,
+    show_clickable_nav: true,
+    button_label_previous: 'back',
+    button_label_next: 'next',
+  data: {
+      task: 'instructions'
+    }
+};
+
+// a really bad consent form page
+var consent_page = {
+    type: jsPsychInstructions,
+    pages: [
+    'Details of informed consent...',
+    ],
+    show_clickable_nav: true,
+    allow_backward: false,
+    button_label_next: 'I consent to participating in this experiment',
+  data: {
+      task: 'consent'
+    }
+};
+
+// a demographics page that is very bad
+var demographics_page = {
+  type: jsPsychSurveyHtmlForm,
+  html: '<div style="text-align: left;">'+
+  '<p>Question 1 </p><input id="Q1" name="Q1" type="text" required/>'+
+  '<p>Question 2 </p><input id="Q2" name="Q2" type="number" />'+
+  '<p>Question 3 </p><input id="Q3" name="Q3" type="email" />'+
+  '<p>Question 4</p>'+
+  '<input type="radio" id="Q4" name="Q4" value="a"><label>a</label><br>'+
+  '<input type="radio" id="Q4" name="Q4" value="b"><label>b</label><br>'+
+  '<input type="radio" id="Q4" name="Q4" value="c"><label>c</label><br>'+
+  '<p>Question 5</p>'+
+  '<input type="checkbox" id="Q5" name="Q5" value="a"><label>a</label><br>'+
+  '<input type="checkbox" id="Q5" name="Q5" value="b"><label>b</label><br>'+
+  '<input type="checkbox" id="Q5" name="Q4" value="c"><label>c</label><br>'+
+  '<p>Question 6</p>'+
+  `<textarea id="feedback_comments" name="feedback_comments" rows="4" cols="50"/></textarea>`+
+  '</br></div>',
+  button_label: 'next',
+  autofocus: 'Q1',
+  data: {
+      task: 'demographics'
+    }
+};
+
+// main trial where images and audio are presented
+var lexical_decision_trial = {
+    type: jsPsychAudioButtonResponse,
+    stimulus: jsPsych.timelineVariable("audio"),
+    choices: [
+      jsPsych.timelineVariable("image_left"),
+      jsPsych.timelineVariable("image_center"),
+      jsPsych.timelineVariable("image_right")
+      ],
+    prompt: "<p>Click on the picture that matched the sound</p>",
+    button_html: '<img src="%choice%" width=200 />',
+    data: {
+      task: 'lexical_decision',
+      image_left: jsPsych.timelineVariable("image_left"),
+      image_center: jsPsych.timelineVariable("image_center"),
+      image_right: jsPsych.timelineVariable("image_right"), 
+      real_word: jsPsych.timelineVariable('real_word'),
+      correct_choice: jsPsych.timelineVariable('correct_choice')
+    }
+};
+
+// fixation trial
+var fixation_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:30pt;">+</div>',
+  choices: 'NO_KEYS',
+  prompt: '<div style="font-size:10pt; position:relative; bottom:150px;"><br/></div>',
+  trial_duration: 2000,
+  data: {
+      task: 'fixation'
+    }
+};
+
+// combined fixation and main trial with timeline variables and randomisation
+var lexical_decision_combined = {
+  timeline: [fixation_trial, lexical_decision_trial],
+  timeline_variables: stimuli,
+  randomize_order: true
+};
+
+// feedback page
+var feedback_page = {
+  type: jsPsychSurveyHtmlForm,
+  html: '<div style="text-align: left;">'+
+  '<p>That is the end of the experiment.</p>'+
+  '<p>How easy did you find the experiment? </p>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="difficult"><label>difficult</label><br>'+
+  '<input type="radio" id="feedback_ease" name="feedback_ease" value="easy"><label>easy</label><br>'+
+  '<p>If you have any feedback about the experiment, please write your comments below.</p>'+
+  `<textarea id="feedback_comments" name="feedback_comments" rows="4" cols="50"/></textarea>`+
+  '</br></div>',
+  button_label: 'Submit results',
+  autofocus: 'feedback_ease',
+  data: {
+      task: 'feedback'
+    }
+};
+
+// get image filenames
+var all_images = [];
+
+for (let i = 0; i < stimuli.length; i++) {
+  all_images.push(stimuli[i].image_left);
+  all_images.push(stimuli[i].image_center);
+  all_images.push(stimuli[i].image_right);
+};
+
+// get audio filenames
+var all_audio = [];
+
+for (let i = 0; i < stimuli.length; i++) {
+  all_audio.push(stimuli[i].audio);
+};
+
+// preload trial
+var preload = {
+    type: jsPsychPreload,
+    images: [all_images],
+    audio: [all_audio],
+  data: {
+      task: 'preload'
+    }
+};
+
+// make the timeline array
+var timeline = [];
+
+// push the trials to the timeline in this order
+timeline.push(preload);
+timeline.push(enter_fullscreen);
+timeline.push(instructions_page);
+timeline.push(consent_page);
+timeline.push(demographics_page);
+
+timeline.push(lexical_decision_combined);
+
+timeline.push(feedback_page);
+
+//run the experiment
+jsPsych.run(timeline);
+```
+
+Now you can use the link and take part yourself.
 
 
 ```{r echo=FALSE, eval=TRUE, warning=FALSE}
