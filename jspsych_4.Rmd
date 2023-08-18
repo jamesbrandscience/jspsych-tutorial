@@ -334,12 +334,6 @@ The last thing we need to change in our jspsych code is the plugin type.
 
 If we change the `type` argument from `jsPsychHtmlKeyboardResponse` to `jsPsychImageKeyboardResponse`, we should now see that the experiment will show the image files and not present the words.
 
-
-
-
-
-
-
 So the final code for a simple auditory lexical decision experiment would be:
 
 ```{js}
@@ -357,13 +351,13 @@ var jsPsych = initJsPsych();
 var timeline = [];
 
 var lexical_decision_trial = {
-  type: jsPsychAudioKeyboardResponse,
+  type: jsPsychImageKeyboardResponse,
   stimulus: jsPsych.timelineVariable("item"),
   choices: ['d', 'h'],
-  prompt: '<div style="font-size:12pt; position:relative; bottom:150px;">press "d" if you think it is a real word, press "h" if you think it is not a real word</div>',
+  prompt: '<div style="font-size:12pt; position:relative; bottom:150px;">press "d" if you think it is something you would eat, press "h" if you think it is not</div>',
   data: {
     task: 'lexical_decision',
-    real_word: jsPsych.timelineVariable('real_word'),
+    real_word: jsPsych.timelineVariable('eat'),
     correct_key: jsPsych.timelineVariable('correct_key')
     }
 };
