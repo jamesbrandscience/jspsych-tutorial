@@ -651,9 +651,19 @@ Once the participant has completed the experiment you will see their data appear
 
 ![](images/dashboard3.png)
 
-You can download the data from cognition.run and then analyse it.
+Each participant will have a stored data file in cognition.run and if you are collecting data from lots of participants you can download all the data by clicking `Download data`.
 
+You will then see a screen asking:
 
+`Data set`: This is either all runs, finished runs or non-finished runs, typically you want only the finished runs.
+
+`Data encoding`: There are a few options here, but typically you would want the csv option.
+
+`File format`: This gives you the option to download everything in one single file, so all the participant data is stored together. If you choose a zip folder, there will be individual files for each participant.
+
+Note, that you can identify different participants by looking at the `run_id` column, which should be a number, e.g. 1 would be the first participant, 2 the second etc.
+
+![](images/cognition_data_download.gif)
 
 
 <!-- # Working with results files in R -->
